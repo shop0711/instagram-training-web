@@ -55,13 +55,22 @@ src/styles/globals.css
 
 ## 画像を差し替える場合
 
-画像用の格納先として以下を用意しています。
+研修内で使用するオリジナル写真素材は以下にまとめています。
 
 ```text
-src/assets/
+public/assets/photos/
+├── book-fair.jpg
+├── hokkaido-fair.jpg
+└── stationery-display.jpg
 ```
 
-画像を追加した場合は、対象コンポーネントまたは `src/App.tsx` からimportしてください。現在は通信状況に左右されないよう、CSSとUIモックだけで成立する構成です。
+実店舗の写真へ変更する場合は、同じファイル名・縦横比 `4:5` の画像で置き換えると、投稿モックや比較レイアウトを変更せずに差し替えられます。推奨サイズは `800 × 1000px`、JPEG品質は80〜90程度です。
+
+写真の上に表示する見出し、ラベル、注釈は以下のコンポーネントで管理しています。
+
+```text
+src/components/TrainingSlideVisual.tsx
+```
 
 ## 発表時の使い方
 

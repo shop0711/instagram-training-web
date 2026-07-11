@@ -50,6 +50,12 @@ const reveal = {
   transition: { duration: 0.38 }
 };
 
+const trainingPhotos = {
+  stationery: '/assets/photos/stationery-display.jpg',
+  books: '/assets/photos/book-fair.jpg',
+  food: '/assets/photos/hokkaido-fair.jpg'
+};
+
 export function TrainingSlideVisual({ slide }: Props) {
   return (
     <div className="visual-slide">
@@ -195,12 +201,13 @@ function AccountRoles() {
 
 function CustomerLens({ slide }: Props) {
   const icons = [PenLine, BookOpen, UtensilsCrossed, Music2];
+  const photos = [trainingPhotos.stationery, trainingPhotos.books, trainingPhotos.food, trainingPhotos.books];
   return (
     <div className="grid h-full gap-3 sm:grid-cols-2">
       {slide.compareExamples?.map((item, i) => {
         const Icon = icons[i];
         return <motion.article {...reveal} transition={{delay:i*.07}} key={item.label} className="grid grid-cols-[62px_1fr] overflow-hidden border border-slate-200 bg-white">
-          <div className="grid place-items-center bg-slate-950 py-3 text-white"><Icon size={23}/><span className="text-[10px] font-bold">{item.label}</span></div>
+          <div className="relative grid place-items-center overflow-hidden py-3 text-white"><img src={photos[i]} alt="" className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-slate-950/60"/><Icon className="relative" size={23}/><span className="relative text-[10px] font-bold">{item.label}</span></div>
           <div className="grid grid-cols-[.82fr_auto_1.18fr] items-center gap-2 p-3">
             <div><span className="text-[9px] font-black text-slate-400">商品</span><p className="mt-1 text-[11px] leading-snug text-slate-400">{item.before}</p></div>
             <ArrowRight size={14} className="text-brand-400"/>
@@ -219,10 +226,10 @@ function ExperienceJourney() {
   ];
   return (
     <div className="grid h-full gap-5 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
-      <div className="border-l-4 border-brand-600 bg-brand-50 p-6">
-        <p className="text-xs font-black text-brand-600">SUCCESS ACCOUNT</p>
-        <p className="mt-3 text-3xl font-black leading-tight text-slate-950">商品カタログではなく<br/>過ごす一日を見せる</p>
-        <div className="mt-5 flex items-center gap-3 text-sm font-bold"><ShoppingBag className="text-brand-600"/>「買う」から「楽しむ」へ</div>
+      <div className="relative min-h-[280px] overflow-hidden border-l-4 border-brand-600">
+        <img src={trainingPhotos.books} alt="整理された書籍フェア売場" className="absolute inset-0 h-full w-full object-cover"/>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent"/>
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-[10px] font-black text-amber-300">SUCCESS ACCOUNT</p><p className="mt-2 text-2xl font-black leading-tight">商品カタログではなく<br/>過ごす一日を見せる</p><div className="mt-3 flex items-center gap-2 text-xs font-bold"><ShoppingBag size={17} className="text-amber-300"/>「買う」から「楽しむ」へ</div></div>
       </div>
       <div className="relative grid grid-cols-2 gap-3">
         <div className="absolute left-1/2 top-8 h-[calc(100%-4rem)] w-px bg-brand-200" />
@@ -350,8 +357,8 @@ function StrongWords({slide}:Props) {
         </button>)}
       </div>
       <div className="grid grid-cols-2 items-center gap-2 bg-slate-950 p-3">
-        <div className="bg-white/10 p-3 text-white/45"><span className="text-[9px] font-black">WEAK</span><div className="mt-3 aspect-square bg-white/5 p-3"><p className="text-sm font-bold">{active.before}</p></div></div>
-        <div className="bg-white p-3"><span className="text-[9px] font-black text-brand-600">STRONG</span><div className="mt-3 aspect-square bg-brand-700 p-3 text-white shadow-lg"><span className="bg-amber-300 px-1.5 py-1 text-[8px] font-black text-slate-950">NEW</span><p className="mt-8 text-lg font-black leading-tight">{active.after}</p></div></div>
+        <div className="bg-white/10 p-3 text-white/45"><span className="text-[9px] font-black">WEAK</span><div className="relative mt-3 aspect-square overflow-hidden"><img src={trainingPhotos.food} alt="" className="absolute inset-0 h-full w-full scale-75 object-cover opacity-30 grayscale"/><span className="absolute inset-0 bg-slate-950/35"/><p className="relative p-3 text-sm font-bold">{active.before}</p></div></div>
+        <div className="bg-white p-3"><span className="text-[9px] font-black text-brand-600">STRONG</span><div className="relative mt-3 aspect-square overflow-hidden text-white shadow-lg"><img src={trainingPhotos.food} alt="北海道フェアの売場" className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-transparent to-transparent"/><span className="absolute left-3 top-3 bg-amber-300 px-1.5 py-1 text-[8px] font-black text-slate-950">NEW</span><p className="absolute inset-x-3 bottom-3 text-lg font-black leading-tight">{active.after}</p></div></div>
       </div>
     </div>
   );
@@ -375,7 +382,7 @@ function AlgorithmLoop() {
     <div className="grid h-full gap-3 lg:grid-cols-[.72fr_1.1fr_.72fr] lg:items-center">
       <div className="border border-slate-200 bg-white p-3">
         <span className="text-[9px] font-black text-slate-400">01 役立つ投稿</span>
-        <div className="mt-2 aspect-[1.25] bg-brand-700 p-3 text-white"><span className="bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">保存版</span><p className="mt-6 text-xl font-black leading-tight">夏休みの<br/>おすすめ5選</p></div>
+        <div className="relative mt-2 aspect-[1.25] overflow-hidden text-white"><img src={trainingPhotos.books} alt="書籍フェアの投稿例" className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/10 to-transparent"/><span className="absolute left-3 top-3 bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">保存版</span><p className="absolute bottom-3 left-3 text-xl font-black leading-tight">夏休みの<br/>おすすめ5選</p></div>
       </div>
       <div className="relative border border-brand-200 bg-brand-50 p-4">
         <span className="text-[9px] font-black text-brand-600">02 価値を行動で判断</span>
@@ -438,17 +445,15 @@ function RolePanel({icon:Icon,label,metaphor,audience,color,items}:{icon:LucideI
 function MiniPost({bad,title,tags}:{bad?:boolean;title:string;tags:string[]}) { return <div className={`relative overflow-hidden border p-3 ${bad?'border-rose-200 bg-rose-50':'border-emerald-200 bg-emerald-50'}`}><StatusLabel tone={bad?'muted':'good'}>{bad?'NG 情報過多':'OK 1テーマ'}</StatusLabel><div className={`mt-3 aspect-square p-3 ${bad?'bg-slate-200':'bg-brand-700 text-white'}`}><p className={`${bad?'text-sm text-slate-500':'text-xl'} font-black`}>{title}</p><div className="mt-4 flex flex-wrap gap-1">{tags.map(x=><span key={x} className={`px-1.5 py-1 text-[9px] ${bad?'bg-white text-slate-500':'bg-white/15 text-white'}`}>{x}</span>)}</div></div></div>; }
 
 function PhotoPanel({bad}:{bad?:boolean}) { return <div className={`grid grid-cols-[1.35fr_.65fr] border ${bad?'border-rose-200':'border-emerald-200'}`}>
-  <div className={`relative overflow-hidden ${bad?'bg-slate-700':'bg-sky-100'}`}><StoreScene bad={bad}/><span className={`absolute left-3 top-3 px-2 py-1 text-xs font-black ${bad?'bg-slate-950 text-white':'bg-emerald-600 text-white'}`}>{bad?'NG':'OK'}</span></div>
+  <div className={`relative min-h-[260px] overflow-hidden ${bad?'bg-slate-700':'bg-sky-100'}`}><img src={trainingPhotos.stationery} alt={bad?'改善前の暗く主役が小さい売場写真':'改善後の明るく主役が伝わる売場写真'} className={`absolute inset-0 h-full w-full object-cover transition ${bad?'scale-75 brightness-[.38] saturate-50':'scale-110'}`}/>{bad&&<><span className="absolute bottom-5 left-3 h-16 w-16 rotate-12 bg-slate-600/80"/><span className="absolute right-3 top-12 h-24 w-12 bg-slate-500/70"/></>}<span className={`absolute left-3 top-3 px-2 py-1 text-xs font-black ${bad?'bg-slate-950 text-white':'bg-emerald-600 text-white'}`}>{bad?'NG':'OK'}</span><span className={`absolute bottom-3 left-3 px-2 py-1 text-[9px] font-black ${bad?'bg-rose-600 text-white':'bg-white text-emerald-800'}`}>{bad?'主役が遠い':'主役へ寄る'}</span></div>
   <div className="flex flex-col justify-center gap-3 bg-white p-4">{(bad?['暗い','背景が散らかる','主役が小さい']:['明るい','背景を整理','主役へ寄る']).map((x,i)=><p key={x} className="flex items-center gap-2 text-xs font-bold">{bad?<X size={14} className="text-rose-500"/>:<Check size={14} className="text-emerald-600"/>}{x}{i===2&&<Camera className="ml-auto text-slate-300" size={15}/>}</p>)}</div>
   </div>; }
 
-function StoreScene({bad}:{bad?:boolean}) { return <div className={`absolute inset-0 p-5 ${bad?'opacity-45':''}`}><div className="absolute inset-x-5 bottom-5 h-24 bg-white shadow-lg"><div className="grid h-full grid-cols-4 gap-2 p-3">{[0,1,2,3].map(i=><div key={i} className={`${i===1&&!bad?'scale-110 bg-brand-600':'bg-amber-300'} transition-transform`} />)}</div></div>{bad&&<><div className="absolute bottom-3 left-2 h-14 w-14 rotate-12 bg-slate-500"/><div className="absolute right-3 top-10 h-20 w-10 bg-slate-400"/></>}</div>; }
-
 function PhoneFrame({children,className='',compact}:{children:React.ReactNode;className?:string;compact?:boolean}) { return <div className={`mx-auto overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-white shadow-phone ${compact?'w-full max-w-[210px]':'w-full'} ${className}`}><div className="flex h-6 items-center justify-between px-3 text-[8px] font-black"><span>9:41</span><span>● ● ▰</span></div><div className="flex items-center gap-2 border-y border-slate-100 px-3 py-2"><span className="grid h-6 w-6 place-items-center rounded-full bg-brand-700 text-[8px] font-black text-white">C4</span><span className="text-[9px] font-bold">coachandfour_store</span></div>{children}<div className="flex justify-between p-3"><span className="flex gap-2"><Heart size={15}/><MessageCircle size={15}/><Send size={15}/></span><Bookmark size={15}/></div></div>; }
 
-function PostArtwork({mode,headline}:{mode:'good'|'bad';headline:string}) { const bad=mode==='bad'; return <div className={`relative aspect-square overflow-hidden p-4 ${bad?'bg-slate-100':'bg-[#e9f2ff]'}`}>{bad?<><div className="mx-auto mt-9 h-20 w-14 bg-slate-300"/><p className="mt-6 text-center text-xs text-slate-400">{headline}</p><div className="absolute inset-3 border border-dashed border-slate-300"/></>:<><span className="bg-amber-300 px-2 py-1 text-[9px] font-black">7/18–20</span><div className="mx-auto mt-5 h-24 w-20 rotate-6 bg-brand-700 shadow-lg"><div className="m-3 h-2 bg-white/80"/><div className="m-3 h-10 bg-white/15"/></div><p className="absolute inset-x-4 bottom-4 text-xl font-black leading-none text-slate-950">{headline}</p></>}</div>; }
+function PostArtwork({mode,headline}:{mode:'good'|'bad';headline:string}) { const bad=mode==='bad'; return <div className={`relative aspect-square overflow-hidden ${bad?'bg-slate-100':'bg-[#e9f2ff]'}`}><img src={trainingPhotos.food} alt={bad?'主役が伝わりにくい投稿例':'北海道フェアの投稿例'} className={`absolute inset-0 h-full w-full object-cover ${bad?'scale-75 opacity-35 grayscale':'scale-105'}`}/>{bad?<><span className="absolute inset-0 bg-slate-100/35"/><p className="absolute inset-x-5 top-1/2 text-center text-xs text-slate-400">{headline}</p><div className="absolute inset-3 border border-dashed border-slate-300"/></>:<><span className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"/><span className="absolute left-4 top-4 bg-amber-300 px-2 py-1 text-[9px] font-black">7/18–20</span><p className="absolute inset-x-4 bottom-4 text-xl font-black leading-none text-slate-950">{headline}</p></>}</div>; }
 
-function FormatPhone({mode}:{mode:'feed'|'stories'|'reels'}) { if(mode==='feed') return <PhoneFrame className="max-w-[230px]"><PostArtwork mode="good" headline="夏のおすすめ5選"/></PhoneFrame>; return <div className="relative mx-auto aspect-[9/16] w-[190px] overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-slate-800 text-white shadow-phone"><StoreScene/><div className="absolute inset-x-3 top-3 h-1 bg-white/80"/><div className="absolute bottom-5 left-4"><p className="text-xs font-black">{mode==='stories'?'本日入荷しました':'売場を30秒でご案内'}</p><p className="mt-1 text-[9px] text-white/70">@coachandfour_store</p></div>{mode==='reels'&&<Play className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" fill="white"/>}</div>; }
+function FormatPhone({mode}:{mode:'feed'|'stories'|'reels'}) { if(mode==='feed') return <PhoneFrame className="max-w-[230px]"><PostArtwork mode="good" headline="夏のおすすめ5選"/></PhoneFrame>; return <div className="relative mx-auto aspect-[9/16] w-[190px] overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-slate-800 text-white shadow-phone"><img src={mode==='stories'?trainingPhotos.stationery:trainingPhotos.books} alt={mode==='stories'?'本日入荷のストーリーズ例':'売場紹介のリール例'} className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/15"/><div className="absolute inset-x-3 top-3 h-1 bg-white/80"/><div className="absolute bottom-5 left-4"><p className="text-xs font-black">{mode==='stories'?'本日入荷しました':'売場を30秒でご案内'}</p><p className="mt-1 text-[9px] text-white/70">@coachandfour_store</p></div>{mode==='reels'&&<Play className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" fill="white"/>}</div>; }
 
 function ProfileComparison() { return <div className="grid grid-cols-2 gap-3"><ProfileMini bad/><ProfileMini/></div>; }
 
