@@ -181,8 +181,13 @@ function CommunicationShift() {
 
 function AccountRoles() {
   return (
-    <div className="grid h-full gap-4 lg:grid-cols-2">
+    <div className="grid h-full gap-3 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
       <RolePanel icon={Compass} label="本体アカウント" metaphor="旅行ガイド" audience="全国のお客様" color="slate" items={['ブランド全体','大型キャンペーン','全店共通情報']} />
+      <div className="hidden flex-col items-center justify-center lg:flex">
+        <span className="h-12 w-px bg-slate-200" />
+        <span className="my-2 border border-slate-200 bg-white px-2 py-3 text-center text-[9px] font-black leading-relaxed text-slate-500">同じ会社<br/>違う役割</span>
+        <span className="h-12 w-px bg-slate-200" />
+      </div>
       <RolePanel icon={MapPin} label="店舗アカウント" metaphor="地域の掲示板" audience="近隣のお客様" color="brand" items={['今日の入荷','この店だけの催し','スタッフのおすすめ']} />
     </div>
   );
@@ -194,12 +199,12 @@ function CustomerLens({ slide }: Props) {
     <div className="grid h-full gap-3 sm:grid-cols-2">
       {slide.compareExamples?.map((item, i) => {
         const Icon = icons[i];
-        return <motion.article {...reveal} transition={{delay:i*.07}} key={item.label} className="grid grid-cols-[64px_1fr] overflow-hidden border border-slate-200 bg-white">
-          <div className="grid place-items-center bg-slate-950 text-white"><Icon size={24}/><span className="text-[10px] font-bold">{item.label}</span></div>
-          <div className="p-3">
-            <p className="flex items-center gap-2 text-xs text-slate-400"><X size={12}/> {item.before}</p>
-            <div className="my-2 h-px bg-slate-100" />
-            <p className="flex items-start gap-2 text-sm font-bold text-brand-900"><Check size={15} className="mt-0.5 shrink-0 text-emerald-600"/> {item.after}</p>
+        return <motion.article {...reveal} transition={{delay:i*.07}} key={item.label} className="grid grid-cols-[62px_1fr] overflow-hidden border border-slate-200 bg-white">
+          <div className="grid place-items-center bg-slate-950 py-3 text-white"><Icon size={23}/><span className="text-[10px] font-bold">{item.label}</span></div>
+          <div className="grid grid-cols-[.82fr_auto_1.18fr] items-center gap-2 p-3">
+            <div><span className="text-[9px] font-black text-slate-400">商品</span><p className="mt-1 text-[11px] leading-snug text-slate-400">{item.before}</p></div>
+            <ArrowRight size={14} className="text-brand-400"/>
+            <div className="border-l-2 border-emerald-500 bg-emerald-50 px-2 py-1.5"><span className="text-[9px] font-black text-emerald-700">体験</span><p className="mt-1 text-xs font-black leading-snug text-slate-900">{item.after}</p></div>
           </div>
         </motion.article>;
       })}
@@ -324,21 +329,30 @@ function FirstImageCompare() {
 function CarouselPatterns() {
   const patterns=[['本日入荷','主役を大きく'],['7/18 開催','日時を先に'],['夏の文具フェア','規模感を見せる'],['スタッフ5選','選ぶ理由を作る']];
   return (
-    <div className="grid h-full gap-4 lg:grid-cols-[1.15fr_.85fr]">
-      <div className="grid grid-cols-4 items-center gap-2">
-        {['1枚目','2枚目','3枚目','最後'].map((x,i)=><div key={x} className={`relative aspect-[.78] p-3 ${i===0?'bg-brand-700 text-white shadow-lg':'border border-slate-200 bg-white'}`}><span className="text-[10px] font-black opacity-60">{x}</span><p className="mt-3 text-sm font-black">{['止める','詳しく','使い方','来店へ'][i]}</p><div className={`absolute inset-x-3 bottom-3 h-12 ${i===0?'bg-white/20':'bg-slate-100'}`}/>{i<3&&<ArrowRight className="absolute -right-4 top-1/2 z-10 text-amber-400" size={20}/>}</div>)}
+    <div className="grid h-full gap-4 lg:grid-cols-[1.2fr_.8fr]">
+      <div className="flex items-center gap-2 border border-slate-200 bg-slate-50 p-4">
+        {['止める','詳しく','納得','来店へ'].map((x,i)=><div key={x} className="contents"><div className={`relative flex aspect-[.78] min-w-0 flex-1 flex-col justify-between p-3 ${i===0?'bg-brand-700 text-white shadow-lg':'bg-white text-slate-900 shadow-sm'}`}><span className="text-[9px] font-black opacity-60">0{i+1}</span><div className={`${i===0?'bg-amber-300':'bg-slate-100'} grid h-14 place-items-center text-[10px] font-black ${i===0?'text-slate-950':'text-slate-400'}`}>{['本日入荷','特徴3つ','使う場面','売場はこちら'][i]}</div><p className="text-sm font-black">{x}</p></div>{i<3&&<ArrowRight className="shrink-0 text-amber-400" size={16}/>}</div>)}
       </div>
-      <div className="grid grid-cols-2 gap-2">{patterns.map(([a,b])=><div key={a} className="border border-slate-200 bg-white p-3"><p className="text-base font-black text-brand-800">{a}</p><p className="mt-1 text-xs text-slate-500">{b}</p></div>)}</div>
+      <div className="grid grid-cols-2 gap-2">{patterns.map(([a,b],i)=><div key={a} className={`border p-3 ${i===0?'border-brand-300 bg-brand-50':'border-slate-200 bg-white'}`}><span className="text-[9px] font-black text-slate-400">TYPE 0{i+1}</span><p className="mt-1 text-base font-black text-brand-800">{a}</p><p className="mt-1 text-xs text-slate-500">{b}</p></div>)}</div>
     </div>
   );
 }
 
 function StrongWords({slide}:Props) {
+  const pairs = slide.wordPairs ?? [];
+  const [selected,setSelected] = useState(0);
+  const active = pairs[selected] ?? {before:'お知らせ',after:'今週末開催'};
   return (
-    <div className="grid h-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {slide.wordPairs?.map((pair,i)=><motion.div {...reveal} transition={{delay:i*.06}} key={pair.before} className="grid grid-cols-[.78fr_auto_1.22fr] items-center border border-slate-200 bg-white">
-        <span className="p-3 text-xs font-bold text-slate-400 line-through">{pair.before}</span><ArrowRight size={14} className="text-brand-400"/><span className="border-l border-brand-100 bg-brand-50 p-3 text-sm font-black text-brand-900">{pair.after}</span>
-      </motion.div>)}
+    <div className="grid h-full gap-4 lg:grid-cols-[1.15fr_.85fr]">
+      <div className="grid grid-cols-2 gap-2">
+        {pairs.map((pair,i)=><button type="button" onClick={()=>setSelected(i)} aria-pressed={selected===i} key={pair.before} className={`grid grid-cols-[.75fr_auto_1.25fr] items-center border p-2 text-left transition ${selected===i?'border-brand-400 bg-brand-50 shadow-card':'border-slate-200 bg-white'}`}>
+          <span className="text-[10px] font-bold text-slate-400 line-through">{pair.before}</span><ArrowRight size={12} className="text-brand-400"/><span className="text-xs font-black text-brand-900">{pair.after}</span>
+        </button>)}
+      </div>
+      <div className="grid grid-cols-2 items-center gap-2 bg-slate-950 p-3">
+        <div className="bg-white/10 p-3 text-white/45"><span className="text-[9px] font-black">WEAK</span><div className="mt-3 aspect-square bg-white/5 p-3"><p className="text-sm font-bold">{active.before}</p></div></div>
+        <div className="bg-white p-3"><span className="text-[9px] font-black text-brand-600">STRONG</span><div className="mt-3 aspect-square bg-brand-700 p-3 text-white shadow-lg"><span className="bg-amber-300 px-1.5 py-1 text-[8px] font-black text-slate-950">NEW</span><p className="mt-8 text-lg font-black leading-tight">{active.after}</p></div></div>
+      </div>
     </div>
   );
 }
@@ -358,12 +372,18 @@ function ProfileEntrance() {
 function AlgorithmLoop() {
   const actions=[['最後まで見る',Eye],['保存',Save],['シェア',Send],['コメント',MessageCircle],['プロフィールへ',CircleUserRound]] as const;
   return (
-    <div className="grid h-full gap-5 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
-      <div className="relative grid grid-cols-5 gap-2">
-        {actions.map(([label,Icon],i)=><div key={label} className="relative border border-slate-200 bg-white p-3 text-center shadow-card"><span className="mx-auto grid h-10 w-10 place-items-center bg-brand-50 text-brand-700"><Icon size={19}/></span><p className="mt-2 text-xs font-black">{label}</p>{i<4&&<ChevronRight className="absolute -right-3 top-1/2 z-10 text-brand-400" size={18}/>}</div>)}
+    <div className="grid h-full gap-3 lg:grid-cols-[.72fr_1.1fr_.72fr] lg:items-center">
+      <div className="border border-slate-200 bg-white p-3">
+        <span className="text-[9px] font-black text-slate-400">01 役立つ投稿</span>
+        <div className="mt-2 aspect-[1.25] bg-brand-700 p-3 text-white"><span className="bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">保存版</span><p className="mt-6 text-xl font-black leading-tight">夏休みの<br/>おすすめ5選</p></div>
       </div>
-      <div className="border-l-4 border-emerald-500 bg-emerald-50 p-5">
-        <Bookmark className="text-emerald-700" size={28}/><p className="mt-3 text-2xl font-black text-slate-950">「役立つ」が<br/>次の表示をつくる</p><p className="mt-2 text-sm text-slate-600">保存したくなるランキングや、家族に送りたくなるイベント情報へ。</p>
+      <div className="relative border border-brand-200 bg-brand-50 p-4">
+        <span className="text-[9px] font-black text-brand-600">02 価値を行動で判断</span>
+        <div className="mt-3 grid grid-cols-5 gap-1.5">{actions.map(([label,Icon])=><div key={label} className="bg-white p-2 text-center shadow-sm"><Icon size={17} className="mx-auto text-brand-700"/><p className="mt-1 text-[8px] font-black leading-tight">{label}</p></div>)}</div>
+        <div className="mt-3 flex items-center justify-center gap-2 text-xs font-black text-brand-900"><HeartHandshake size={18}/>「見た人の役に立った」</div>
+      </div>
+      <div className="border-l-4 border-emerald-500 bg-emerald-50 p-4">
+        <span className="text-[9px] font-black text-emerald-700">03 次の表示へ</span><Bookmark className="mt-3 text-emerald-700" size={26}/><p className="mt-2 text-xl font-black text-slate-950">また届く</p><p className="mt-1 text-xs leading-relaxed text-slate-600">似た興味を持つ地域のお客様へ。</p>
       </div>
     </div>
   );
@@ -390,7 +410,10 @@ function RiskDecision({slide}:Props) {
         <Decision tone="good" icon={Check} label="投稿してよい" detail="事実・権利・期間を確認済み" />
         <Decision tone="warn" icon={AlertTriangle} label="要確認" detail="担当者・上長へ相談する" />
         <Decision tone="stop" icon={X} label="投稿しない" detail="迷いが残る、許可がない" />
-        <div className="mt-1 bg-slate-950 p-4 text-center text-2xl font-black text-white">迷ったら投稿しない。</div>
+        <div className="mt-1 grid grid-cols-[auto_1fr] items-center bg-slate-950 text-white">
+          <span className="bg-rose-600 px-3 py-4 text-xs font-black tracking-[.18em]">STOP</span>
+          <span className="px-3 text-center text-xl font-black">迷ったら投稿しない。</span>
+        </div>
       </div>
     </div>
   );
@@ -406,7 +429,8 @@ function RolePanel({icon:Icon,label,metaphor,audience,color,items}:{icon:LucideI
   const active=color==='brand';
   return <div className={`relative overflow-hidden border p-5 ${active?'border-brand-300 bg-brand-50':'border-slate-200 bg-slate-50'}`}>
     <div className="flex items-start justify-between"><div className={`grid h-12 w-12 place-items-center ${active?'bg-brand-700 text-white':'bg-slate-900 text-white'}`}><Icon/></div><span className="text-xs font-black text-slate-400">→ {audience}</span></div>
-    <p className="mt-4 text-xs font-bold text-slate-500">{label}</p><h2 className="text-2xl font-black text-slate-950">{metaphor}</h2>
+    <p className="mt-3 text-xs font-bold text-slate-500">{label}</p><h2 className="text-2xl font-black text-slate-950">{metaphor}</h2>
+    <div className={`mt-3 flex items-center justify-between border-y py-2 ${active?'border-brand-200':'border-slate-200'}`}><span className="text-[9px] font-black text-slate-400">距離 × 時間</span><strong className={`text-lg ${active?'text-brand-800':'text-slate-700'}`}>{active?'近く × 今':'広く × 長く'}</strong></div>
     <div className="mt-4 grid grid-cols-3 gap-2">{items.map(x=><span key={x} className="bg-white p-3 text-center text-xs font-bold shadow-sm">{x}</span>)}</div>
   </div>;
 }

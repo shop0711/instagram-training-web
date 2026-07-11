@@ -8,6 +8,7 @@ type SpeakerNoteProps = {
 
 export function SpeakerNote({ children }: SpeakerNoteProps) {
   const [open, setOpen] = useState(false);
+  const cues = children.split('。').map((cue) => cue.trim()).filter(Boolean).slice(0, 3);
 
   return (
     <div className="speaker-note no-print mt-5 max-w-3xl">
@@ -34,8 +35,13 @@ export function SpeakerNote({ children }: SpeakerNoteProps) {
             transition={{ duration: 0.22 }}
             className="overflow-hidden"
           >
-            <div className="mt-3 rounded-2xl border border-amber-200/70 bg-amber-50/85 px-4 py-3 text-sm leading-relaxed text-amber-950">
-              {children}
+            <div className="mt-3 grid gap-2 rounded-lg border border-amber-200/70 bg-amber-50/90 p-3 text-amber-950 sm:grid-cols-3">
+              {cues.map((cue, index) => (
+                <div key={cue} className="border-l-2 border-amber-400 bg-white/70 px-3 py-2 text-xs leading-relaxed">
+                  <span className="mb-1 block text-[9px] font-black text-amber-700">TALK {index + 1}</span>
+                  {cue}。
+                </div>
+              ))}
             </div>
           </motion.div>
         )}
