@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Original training screenshots stay local. Optimized assets in public are committed.
+tools/source-assets/

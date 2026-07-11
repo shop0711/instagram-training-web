@@ -1,31 +1,22 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import {
   AlertTriangle,
-  ArrowDown,
   ArrowRight,
   BookOpen,
   Bot,
   Bookmark,
-  CalendarDays,
   Camera,
   Check,
   ChevronRight,
   CircleUserRound,
-  Clock3,
   Compass,
   Eye,
-  Film,
-  Grid3X3,
-  Heart,
   HeartHandshake,
   MapPin,
   MessageCircle,
   Music2,
-  PackageOpen,
   PenLine,
-  Pin,
-  Play,
   Save,
   Send,
   ShieldCheck,
@@ -40,7 +31,18 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { SlideData } from '../data/training';
+import { assetById } from '../data/assetManifest';
 import { Checklist } from './Checklist';
+import {
+  RealAlgorithmPost,
+  RealFirstImageCompare,
+  RealFormatGuide,
+  RealPhotoCompare,
+  RealPostGrid,
+  RealProfileEntrance,
+  RealityCover,
+  SwipeCarouselLesson,
+} from './RealAssetLessons';
 
 type Props = { slide: SlideData };
 
@@ -51,9 +53,9 @@ const reveal = {
 };
 
 const trainingPhotos = {
-  stationery: '/assets/photos/stationery-display.jpg',
-  books: '/assets/photos/book-fair.jpg',
-  food: '/assets/photos/hokkaido-fair.jpg'
+  stationery: assetById.img_4820.media ?? assetById.img_4820.path,
+  books: assetById.img_4828.media ?? assetById.img_4828.path,
+  food: assetById.img_4824.media ?? assetById.img_4824.path
 };
 
 export function TrainingSlideVisual({ slide }: Props) {
@@ -107,38 +109,7 @@ function renderVisual(slide: SlideData) {
 }
 
 function CoverVisual({ slide }: Props) {
-  return (
-    <div className="grid h-full gap-6 lg:grid-cols-[1.04fr_.96fr] lg:items-center">
-      <div className="relative z-10">
-        <div className="mb-4 flex gap-2">
-          <Tag icon={MapPin}>店舗発信の実践研修</Tag><Tag icon={Clock3}>30 min</Tag>
-        </div>
-        <h1 id={`${slide.id}-title`} className="max-w-4xl text-balance text-[clamp(2.5rem,5vw,5.4rem)] font-black leading-[.98] text-slate-950">
-          店舗から届ける<br /><span className="text-brand-700">Instagram研修</span>
-        </h1>
-        <p className="mt-5 max-w-2xl text-[clamp(1.05rem,2vw,1.7rem)] font-semibold leading-snug text-slate-600">
-          商品を並べるSNSから、<span className="text-slate-950">「今日、行く理由」</span>を届けるSNSへ。
-        </p>
-        <div className="mt-6 flex items-center gap-3 text-sm font-bold text-brand-800">
-          <span className="grid h-9 w-9 place-items-center bg-brand-700 text-white"><Play size={16} fill="currentColor" /></span>
-          見ればわかる、明日から動ける
-        </div>
-      </div>
-      <div className="relative mx-auto h-full min-h-[360px] w-full max-w-xl">
-        <div className="absolute inset-x-6 bottom-3 top-8 border border-slate-200 bg-[#edf4ff]" />
-        <div className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white p-4 shadow-card">
-          <p className="text-[10px] font-black text-brand-700">TODAY</p><p className="mt-1 text-lg font-black">本日入荷</p>
-          <p className="text-xs text-slate-500">店舗の「今」が来店理由になる</p>
-        </div>
-        <PhoneFrame className="absolute right-2 top-0 w-[270px] rotate-[2deg]">
-          <PostArtwork mode="good" headline="北海道フェア開催中" />
-        </PhoneFrame>
-        <div className="absolute bottom-0 right-44 z-20 border-l-4 border-amber-400 bg-slate-950 px-4 py-3 text-white shadow-card">
-          <p className="text-[10px] font-bold text-slate-300">NEXT ACTION</p><p className="text-sm font-black">売場を1枚、撮ってみる</p>
-        </div>
-      </div>
-    </div>
-  );
+  return <RealityCover slide={slide} />;
 }
 
 function GoalRoute({ slide }: Props) {
@@ -242,24 +213,7 @@ function ExperienceJourney() {
 }
 
 function StoreIdeaMap() {
-  const zones = [
-    ['入口','本日入荷','限定特典',PackageOpen],['平台','ランキング','スタッフ推し',Grid3X3],
-    ['催事','季節フェア','イベント準備',CalendarDays],['売場','再入荷','POPの裏側',Camera]
-  ] as const;
-  return (
-    <div className="relative h-full min-h-[300px] border border-slate-200 bg-[#f8fafc] p-4">
-      <div className="absolute left-1/2 top-1/2 z-20 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center bg-brand-700 text-center text-white shadow-lg">
-        <Store size={28}/><span className="text-xs font-black">毎日の売場</span>
-      </div>
-      <div className="grid h-full grid-cols-2 gap-3">
-        {zones.map(([zone,a,b,Icon],i)=><motion.div {...reveal} transition={{delay:i*.08}} key={zone} className="flex items-center gap-4 border border-slate-200 bg-white p-4">
-          <div className="grid h-11 w-11 shrink-0 place-items-center bg-brand-50 text-brand-700"><Icon size={20}/></div>
-          <div><p className="text-[10px] font-black text-slate-400">{zone}</p><p className="text-sm font-black">{a}</p><p className="text-xs text-slate-500">＋ {b}</p></div>
-        </motion.div>)}
-      </div>
-      <p className="absolute bottom-2 left-1/2 z-30 -translate-x-1/2 bg-amber-300 px-4 py-1 text-xs font-black text-slate-950">業務そのものがコンテンツ</p>
-    </div>
-  );
+  return <RealPostGrid />;
 }
 
 function OneTheme() {
@@ -282,67 +236,19 @@ function OneTheme() {
 }
 
 function PhotoCompare() {
-  return (
-    <div className="grid h-full gap-4 lg:grid-cols-2">
-      <PhotoPanel bad />
-      <PhotoPanel />
-    </div>
-  );
+  return <RealPhotoCompare />;
 }
 
 function FormatGuide() {
-  const [active,setActive] = useState<'feed'|'stories'|'reels'>('feed');
-  const formats = {
-    feed:{label:'フィード',life:'残す',desc:'検索・保存される情報',icon:Grid3X3,uses:['大型フェア','ランキング','店舗案内']},
-    stories:{label:'ストーリーズ',life:'今',desc:'24時間の鮮度がある情報',icon:Clock3,uses:['本日入荷','開催中','急ぎのお知らせ']},
-    reels:{label:'リール',life:'感じる',desc:'動きと音で雰囲気を伝える',icon:Film,uses:['店内ツアー','展開風景','スタッフ目線']}
-  };
-  const item=formats[active];
-  return (
-    <div className="grid h-full gap-5 lg:grid-cols-[.8fr_1.2fr]">
-      <div className="flex items-center justify-center">
-        <AnimatePresence mode="wait"><motion.div key={active} initial={{opacity:0,x:10}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-10}}><FormatPhone mode={active}/></motion.div></AnimatePresence>
-      </div>
-      <div className="flex flex-col justify-center">
-        <div className="grid grid-cols-3 border border-slate-200 bg-white p-1" role="tablist" aria-label="投稿形式">
-          {(Object.keys(formats) as Array<keyof typeof formats>).map(key=>{const Icon=formats[key].icon;return <button role="tab" aria-selected={active===key} onClick={()=>setActive(key)} key={key} className={`flex items-center justify-center gap-2 px-3 py-2 text-xs font-black ${active===key?'bg-brand-700 text-white':'text-slate-500'}`}><Icon size={15}/>{formats[key].label}</button>})}
-        </div>
-        <div className="mt-4 border-l-4 border-brand-600 bg-brand-50 p-5">
-          <p className="text-xs font-black text-brand-600">{item.life.toUpperCase()} INFORMATION</p><h3 className="mt-1 text-2xl font-black">{item.desc}</h3>
-          <div className="mt-4 grid grid-cols-3 gap-2">{item.uses.map(x=><span key={x} className="bg-white p-2 text-center text-xs font-bold">{x}</span>)}</div>
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-black">
-          <span className="border-t-4 border-blue-500 p-2">残す＝Feed</span><span className="border-t-4 border-amber-400 p-2">今＝Stories</span><span className="border-t-4 border-rose-500 p-2">体験＝Reels</span>
-        </div>
-      </div>
-    </div>
-  );
+  return <RealFormatGuide />;
 }
 
 function FirstImageCompare() {
-  return (
-    <div className="grid h-full grid-cols-2 gap-4 lg:grid-cols-[1fr_1fr_.8fr]">
-      <PhoneFrame compact><PostArtwork mode="bad" headline="お知らせ"/></PhoneFrame>
-      <PhoneFrame compact><PostArtwork mode="good" headline="今週末開催"/></PhoneFrame>
-      <div className="col-span-2 flex flex-col justify-center bg-slate-950 p-5 text-white lg:col-span-1">
-        <p className="text-xs font-black text-amber-300">0.5秒のチェック</p>
-        {['何の投稿？','なぜ見る？','主役はどれ？'].map((x,i)=><div key={x} className="mt-3 flex items-center gap-3 border-b border-white/15 pb-3"><span className="text-2xl font-black text-white/25">0{i+1}</span><span className="font-bold">{x}</span></div>)}
-        <p className="mt-4 text-sm font-black text-amber-300">全部わかれば、指が止まる。</p>
-      </div>
-    </div>
-  );
+  return <RealFirstImageCompare />;
 }
 
 function CarouselPatterns() {
-  const patterns=[['本日入荷','主役を大きく'],['7/18 開催','日時を先に'],['夏の文具フェア','規模感を見せる'],['スタッフ5選','選ぶ理由を作る']];
-  return (
-    <div className="grid h-full gap-4 lg:grid-cols-[1.2fr_.8fr]">
-      <div className="flex items-center gap-2 border border-slate-200 bg-slate-50 p-4">
-        {['止める','詳しく','納得','来店へ'].map((x,i)=><div key={x} className="contents"><div className={`relative flex aspect-[.78] min-w-0 flex-1 flex-col justify-between p-3 ${i===0?'bg-brand-700 text-white shadow-lg':'bg-white text-slate-900 shadow-sm'}`}><span className="text-[9px] font-black opacity-60">0{i+1}</span><div className={`${i===0?'bg-amber-300':'bg-slate-100'} grid h-14 place-items-center text-[10px] font-black ${i===0?'text-slate-950':'text-slate-400'}`}>{['本日入荷','特徴3つ','使う場面','売場はこちら'][i]}</div><p className="text-sm font-black">{x}</p></div>{i<3&&<ArrowRight className="shrink-0 text-amber-400" size={16}/>}</div>)}
-      </div>
-      <div className="grid grid-cols-2 gap-2">{patterns.map(([a,b],i)=><div key={a} className={`border p-3 ${i===0?'border-brand-300 bg-brand-50':'border-slate-200 bg-white'}`}><span className="text-[9px] font-black text-slate-400">TYPE 0{i+1}</span><p className="mt-1 text-base font-black text-brand-800">{a}</p><p className="mt-1 text-xs text-slate-500">{b}</p></div>)}</div>
-    </div>
-  );
+  return <SwipeCarouselLesson />;
 }
 
 function StrongWords({slide}:Props) {
@@ -365,25 +271,14 @@ function StrongWords({slide}:Props) {
 }
 
 function ProfileEntrance() {
-  return (
-    <div className="grid h-full gap-4 lg:grid-cols-[.72fr_1.28fr]">
-      <div className="flex flex-col justify-center bg-slate-950 p-5 text-white">
-        <p className="text-xs font-black text-amber-300">FIRST VISIT FLOW</p>
-        {['投稿を見る','プロフィールへ','店舗を理解','来店・フォロー'].map((x,i)=><div key={x} className="flex items-center gap-3 py-2"><span className="grid h-7 w-7 place-items-center border border-white/30 text-xs font-black">{i+1}</span><b>{x}</b>{i<3&&<ArrowDown className="ml-auto text-white/30" size={15}/>}</div>)}
-      </div>
-      <ProfileComparison />
-    </div>
-  );
+  return <RealProfileEntrance />;
 }
 
 function AlgorithmLoop() {
   const actions=[['最後まで見る',Eye],['保存',Save],['シェア',Send],['コメント',MessageCircle],['プロフィールへ',CircleUserRound]] as const;
   return (
     <div className="grid h-full gap-3 lg:grid-cols-[.72fr_1.1fr_.72fr] lg:items-center">
-      <div className="border border-slate-200 bg-white p-3">
-        <span className="text-[9px] font-black text-slate-400">01 役立つ投稿</span>
-        <div className="relative mt-2 aspect-[1.25] overflow-hidden text-white"><img src={trainingPhotos.books} alt="書籍フェアの投稿例" className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/10 to-transparent"/><span className="absolute left-3 top-3 bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">保存版</span><p className="absolute bottom-3 left-3 text-xl font-black leading-tight">夏休みの<br/>おすすめ5選</p></div>
-      </div>
+      <RealAlgorithmPost />
       <div className="relative border border-brand-200 bg-brand-50 p-4">
         <span className="text-[9px] font-black text-brand-600">02 価値を行動で判断</span>
         <div className="mt-3 grid grid-cols-5 gap-1.5">{actions.map(([label,Icon])=><div key={label} className="bg-white p-2 text-center shadow-sm"><Icon size={17} className="mx-auto text-brand-700"/><p className="mt-1 text-[8px] font-black leading-tight">{label}</p></div>)}</div>
@@ -426,8 +321,6 @@ function RiskDecision({slide}:Props) {
   );
 }
 
-function Tag({icon:Icon,children}:{icon:LucideIcon;children:React.ReactNode}) { return <span className="inline-flex items-center gap-1 border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600"><Icon size={13}/>{children}</span>; }
-
 function StatusLabel({children,tone}:{children:React.ReactNode;tone:'muted'|'good'}) { return <span className={`w-fit px-3 py-1 text-xs font-black ${tone==='good'?'bg-brand-700 text-white':'bg-slate-200 text-slate-600'}`}>{children}</span>; }
 
 function Node({icon:Icon,label,muted,active}:{icon:LucideIcon;label:string;muted?:boolean;active?:boolean}) { return <div className={`grid place-items-center border p-4 text-center ${active?'border-brand-200 bg-white text-brand-800':'border-slate-200 bg-white'} ${muted?'opacity-55':''}`}><Icon size={30}/><b className="mt-2 text-sm">{label}</b></div>; }
@@ -443,21 +336,6 @@ function RolePanel({icon:Icon,label,metaphor,audience,color,items}:{icon:LucideI
 }
 
 function MiniPost({bad,title,tags}:{bad?:boolean;title:string;tags:string[]}) { return <div className={`relative overflow-hidden border p-3 ${bad?'border-rose-200 bg-rose-50':'border-emerald-200 bg-emerald-50'}`}><StatusLabel tone={bad?'muted':'good'}>{bad?'NG 情報過多':'OK 1テーマ'}</StatusLabel><div className={`mt-3 aspect-square p-3 ${bad?'bg-slate-200':'bg-brand-700 text-white'}`}><p className={`${bad?'text-sm text-slate-500':'text-xl'} font-black`}>{title}</p><div className="mt-4 flex flex-wrap gap-1">{tags.map(x=><span key={x} className={`px-1.5 py-1 text-[9px] ${bad?'bg-white text-slate-500':'bg-white/15 text-white'}`}>{x}</span>)}</div></div></div>; }
-
-function PhotoPanel({bad}:{bad?:boolean}) { return <div className={`grid grid-cols-[1.35fr_.65fr] border ${bad?'border-rose-200':'border-emerald-200'}`}>
-  <div className={`relative min-h-[260px] overflow-hidden ${bad?'bg-slate-700':'bg-sky-100'}`}><img src={trainingPhotos.stationery} alt={bad?'改善前の暗く主役が小さい売場写真':'改善後の明るく主役が伝わる売場写真'} className={`absolute inset-0 h-full w-full object-cover transition ${bad?'scale-75 brightness-[.38] saturate-50':'scale-110'}`}/>{bad&&<><span className="absolute bottom-5 left-3 h-16 w-16 rotate-12 bg-slate-600/80"/><span className="absolute right-3 top-12 h-24 w-12 bg-slate-500/70"/></>}<span className={`absolute left-3 top-3 px-2 py-1 text-xs font-black ${bad?'bg-slate-950 text-white':'bg-emerald-600 text-white'}`}>{bad?'NG':'OK'}</span><span className={`absolute bottom-3 left-3 px-2 py-1 text-[9px] font-black ${bad?'bg-rose-600 text-white':'bg-white text-emerald-800'}`}>{bad?'主役が遠い':'主役へ寄る'}</span></div>
-  <div className="flex flex-col justify-center gap-3 bg-white p-4">{(bad?['暗い','背景が散らかる','主役が小さい']:['明るい','背景を整理','主役へ寄る']).map((x,i)=><p key={x} className="flex items-center gap-2 text-xs font-bold">{bad?<X size={14} className="text-rose-500"/>:<Check size={14} className="text-emerald-600"/>}{x}{i===2&&<Camera className="ml-auto text-slate-300" size={15}/>}</p>)}</div>
-  </div>; }
-
-function PhoneFrame({children,className='',compact}:{children:React.ReactNode;className?:string;compact?:boolean}) { return <div className={`mx-auto overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-white shadow-phone ${compact?'w-full max-w-[210px]':'w-full'} ${className}`}><div className="flex h-6 items-center justify-between px-3 text-[8px] font-black"><span>9:41</span><span>● ● ▰</span></div><div className="flex items-center gap-2 border-y border-slate-100 px-3 py-2"><span className="grid h-6 w-6 place-items-center rounded-full bg-brand-700 text-[8px] font-black text-white">C4</span><span className="text-[9px] font-bold">coachandfour_store</span></div>{children}<div className="flex justify-between p-3"><span className="flex gap-2"><Heart size={15}/><MessageCircle size={15}/><Send size={15}/></span><Bookmark size={15}/></div></div>; }
-
-function PostArtwork({mode,headline}:{mode:'good'|'bad';headline:string}) { const bad=mode==='bad'; return <div className={`relative aspect-square overflow-hidden ${bad?'bg-slate-100':'bg-[#e9f2ff]'}`}><img src={trainingPhotos.food} alt={bad?'主役が伝わりにくい投稿例':'北海道フェアの投稿例'} className={`absolute inset-0 h-full w-full object-cover ${bad?'scale-75 opacity-35 grayscale':'scale-105'}`}/>{bad?<><span className="absolute inset-0 bg-slate-100/35"/><p className="absolute inset-x-5 top-1/2 text-center text-xs text-slate-400">{headline}</p><div className="absolute inset-3 border border-dashed border-slate-300"/></>:<><span className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"/><span className="absolute left-4 top-4 bg-amber-300 px-2 py-1 text-[9px] font-black">7/18–20</span><p className="absolute inset-x-4 bottom-4 text-xl font-black leading-none text-slate-950">{headline}</p></>}</div>; }
-
-function FormatPhone({mode}:{mode:'feed'|'stories'|'reels'}) { if(mode==='feed') return <PhoneFrame className="max-w-[230px]"><PostArtwork mode="good" headline="夏のおすすめ5選"/></PhoneFrame>; return <div className="relative mx-auto aspect-[9/16] w-[190px] overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-slate-800 text-white shadow-phone"><img src={mode==='stories'?trainingPhotos.stationery:trainingPhotos.books} alt={mode==='stories'?'本日入荷のストーリーズ例':'売場紹介のリール例'} className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/15"/><div className="absolute inset-x-3 top-3 h-1 bg-white/80"/><div className="absolute bottom-5 left-4"><p className="text-xs font-black">{mode==='stories'?'本日入荷しました':'売場を30秒でご案内'}</p><p className="mt-1 text-[9px] text-white/70">@coachandfour_store</p></div>{mode==='reels'&&<Play className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" fill="white"/>}</div>; }
-
-function ProfileComparison() { return <div className="grid grid-cols-2 gap-3"><ProfileMini bad/><ProfileMini/></div>; }
-
-function ProfileMini({bad}:{bad?:boolean}) { return <div className={`relative border-[5px] border-slate-950 bg-white p-3 ${bad?'opacity-65':''}`}><span className={`absolute right-2 top-2 px-2 py-1 text-[9px] font-black text-white ${bad?'bg-rose-500':'bg-emerald-600'}`}>{bad?'NG':'GOOD'}</span><div className="flex items-center gap-3"><div className={`grid h-12 w-12 place-items-center rounded-full ${bad?'bg-slate-200 text-slate-400':'bg-brand-700 text-white'} text-xs font-black`}>{bad?'?':'C4'}</div><div><p className="text-xs font-black">{bad?'店舗公式':'コーチャンフォー若葉台店'}</p><p className="text-[9px] text-slate-400">128 posts · 3,240 followers</p></div></div><div className="mt-3 bg-slate-50 p-2 text-[9px] leading-relaxed text-slate-600">{bad?'新着情報を発信します。':'書籍・文具・音楽・食品・カフェ。若葉台店の「今」をお届け。'}</div><div className="mt-3 flex gap-2">{['店舗案内','イベント','アクセス'].map(x=><div key={x} className="text-center"><span className={`block h-8 w-8 rounded-full ${bad?'bg-slate-100':'border-2 border-brand-200 bg-brand-50'}`}/><span className="text-[7px]">{bad?'':x}</span></div>)}</div><div className="mt-3 grid grid-cols-3 gap-1">{[0,1,2,3,4,5].map(i=><div key={i} className={`aspect-square ${bad?'bg-slate-200':'bg-brand-100'}`}>{!bad&&i<3&&<Pin size={10} className="m-1 text-brand-700"/>}</div>)}</div></div>; }
 
 function RoleSplit({title,icon:Icon,tone,items}:{title:string;icon:LucideIcon;tone:'dark'|'brand';items:string[]}) { return <div className={`p-5 ${tone==='dark'?'bg-slate-950 text-white':'bg-brand-50 text-slate-950 border border-brand-200'}`}><Icon size={28} className={tone==='dark'?'text-amber-300':'text-brand-700'}/><h3 className="mt-3 text-xl font-black">{title}</h3><div className="mt-4 grid grid-cols-2 gap-2">{items.map(x=><span key={x} className={`p-2 text-xs font-bold ${tone==='dark'?'bg-white/10':'bg-white'}`}>{x}</span>)}</div></div>; }
 

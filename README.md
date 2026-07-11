@@ -1,11 +1,11 @@
 # 店舗から届けるInstagram研修
 
-「今日、このお店に行く理由」をつくるSNS発信をテーマにした、ブラウザ表示型の社内研修資料です。
+実際の店舗Instagramスクリーンショットを教材化した、Webプレゼン型の社内研修資料です。
 
-- PCでは1画面ずつ進むプレゼンテーションとして使用
-- スマートフォンでは縦スクロールのマニュアルとして閲覧
-- 外部API・外部画像なしで動作する静的サイト
-- 全17セクション、約30分想定
+- PCでは1画面ずつ進む発表資料として使用
+- スマートフォンでは縦スクロールで復習
+- 発表モード / 閲覧モードを切り替え
+- 全17セクション、講師メモ、投稿前チェックリスト、印刷CSSを搭載
 
 ## 技術構成
 
@@ -15,6 +15,7 @@
 - Tailwind CSS
 - Motion for React
 - lucide-react
+- sharp
 
 ## 起動方法
 
@@ -23,9 +24,7 @@ npm install
 npm run dev
 ```
 
-ターミナルに表示されるローカルURLをブラウザで開いてください。
-
-## ビルド方法
+## ビルド
 
 ```bash
 npm run build
@@ -37,71 +36,85 @@ npm run build
 npm run preview
 ```
 
-## 資料本文の修正場所
+## 画像素材の運用
 
-研修本文、章名、各セクションの説明、カード、講師メモは以下にまとめています。
+実スクリーンショットの元素材は次に配置します。
+
+```text
+tools/source-assets/
+```
+
+このフォルダは容量が大きい元素材置き場のため、Git管理や本番公開には含めません。`.gitignore` の対象です。
+
+Webサイトで読み込む軽量画像は、次に生成されます。
+
+```text
+public/assets/processed/
+```
+
+画像を追加・差し替えた場合は、ローカルで次を実行してください。
+
+```bash
+npm run assets:build
+```
+
+`assets:build` は `tools/source-assets` 内のPNG/JPGをWebPへ変換し、通常表示用、サムネイル用、投稿トリミング用の画像を生成します。
+
+Vercel公開時は `public/assets/processed/` の画像が必要です。`tools/source-assets` が存在しなくても、processed画像があれば `npm run build` は成功する構成です。
+
+## 画像マニフェスト
+
+使用画像の分類と参照先は次に集約しています。
+
+```text
+src/data/assetManifest.ts
+```
+
+各画像について、元ファイル名、processed画像パス、説明、店舗名、種別、ジャンル、使用予定セクション、alt、注釈ラベルを管理します。
+
+## 主な編集箇所
+
+研修本文、章タイトル、講師メモは主に次で編集します。
 
 ```text
 src/data/training.ts
 ```
 
-UIやレイアウトは主に以下です。
+実スクショを使った図解・比較・スマホUI表現は主に次で編集します。
+
+```text
+src/components/RealAssetLessons.tsx
+src/components/TrainingSlideVisual.tsx
+```
+
+全体レイアウトとレスポンシブ調整は次です。
 
 ```text
 src/App.tsx
-src/components/
 src/styles/globals.css
-```
-
-## 画像を差し替える場合
-
-研修内で使用するオリジナル写真素材は以下にまとめています。
-
-```text
-public/assets/photos/
-├── book-fair.jpg
-├── hokkaido-fair.jpg
-└── stationery-display.jpg
-```
-
-実店舗の写真へ変更する場合は、同じファイル名・縦横比 `4:5` の画像で置き換えると、投稿モックや比較レイアウトを変更せずに差し替えられます。推奨サイズは `800 × 1000px`、JPEG品質は80〜90程度です。
-
-写真の上に表示する見出し、ラベル、注釈は以下のコンポーネントで管理しています。
-
-```text
-src/components/TrainingSlideVisual.tsx
 ```
 
 ## 発表時の使い方
 
 1. PCブラウザで開く
-2. 上部の「発表」を選ぶ
-3. 右下の「次へ」「戻る」、またはキーボードの左右キーで移動
-4. 必要に応じて右上の全画面ボタンを使用
-5. 目次ボタンから任意のセクションへ移動
-6. 各ページ下部の「講師メモを表示」で補足を確認
+2. 右下の「発表」を選ぶ
+3. 次へ / 戻る、またはキーボードの左右キーで移動
+4. 必要に応じて全画面表示
+5. 目次から任意のセクションへ移動
+6. 各ページ下部の講師メモで補足を確認
 
-キーボード操作：
+キーボード操作:
 
-- `→` / `PageDown` / `Space`：次へ
-- `←` / `PageUp`：戻る
-- `Home`：最初へ
-- `End`：最後へ
+- `ArrowRight` / `PageDown` / `Space`: 次へ
+- `ArrowLeft` / `PageUp`: 戻る
+- `Home`: 最初へ
+- `End`: 最後へ
 
-スマートフォンでは自動的に縦スクロール型の閲覧モードになります。
+## Vercel公開
 
-## 印刷・PDF出力
+GitHubへpushすると、連携済みのVercelプロジェクトで通常どおりビルドできます。
 
-ブラウザの印刷機能を使用してください。印刷時は操作ナビゲーションと講師メモが非表示になり、各セクションが改ページされます。PDFとして保存すると配布用資料として利用できます。
-
-## Vercelで公開する場合
-
-1. このフォルダをGitHubリポジトリへpush
-2. Vercelで「Add New Project」を選択
-3. GitHubリポジトリを選択
-4. Framework Presetは通常Viteとして自動認識
-5. Build Command：`npm run build`
-6. Output Directory：`dist`
-7. Deployを実行
-
-静的サイトなので、NetlifyやGitHub Pagesなどにも公開できます。
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- 画像再生成はローカルで `npm run assets:build`
+- Vercel上では `tools/source-assets` に依存しません
