@@ -275,81 +275,260 @@ function FormatPhone({ mode, headline, image, alt }: { mode: Format; headline: s
 }
 
 export function RealFirstImageCompare() {
-  const media = food.media ?? food.path;
+  const [index, setIndex] = useState(0);
+  const touchStart = useRef<number | null>(null);
+  const carousel = [
+    {
+      label: '1枚目：止める',
+      src: '/assets/generated/first-image-carousel-1.webp',
+      alt: '北海道フェアおすすめ5選のスクロールを止める1枚目サンプル',
+      detail: '何の投稿か、なぜ見るべきかを一瞬で伝える',
+    },
+    {
+      label: '2枚目：詳しく',
+      src: '/assets/generated/first-image-carousel-2.webp',
+      alt: '北海道フェアの人気商品カテゴリを詳しく見せる2枚目サンプル',
+      detail: 'おすすめ商品のジャンル感を整理して見せる',
+    },
+    {
+      label: '3枚目：納得',
+      src: '/assets/generated/first-image-carousel-3.webp',
+      alt: '北海道フェアの商品を選ぶ理由と楽しみ方を伝える3枚目サンプル',
+      detail: '手土産やおうち時間など、買う理由を伝える',
+    },
+    {
+      label: '4枚目：来店へ',
+      src: '/assets/generated/first-image-carousel-4.webp',
+      alt: '北海道フェアの売場と期間限定を案内する4枚目サンプル',
+      detail: '場所・期間・行動につなげる',
+    },
+  ];
+  const active = carousel[index];
+  const move = (next: number) => setIndex((next + carousel.length) % carousel.length);
+
   return (
-    <div className="grid h-full gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_.75fr]">
-      <FirstImageCard bad media={media} />
-      <div className="hidden items-center lg:flex"><ArrowRight className="text-brand-500" /></div>
-      <FirstImageCard media={media} />
-      <aside className="col-span-2 flex flex-col justify-center bg-slate-950 p-5 text-white sm:col-span-2 lg:col-span-1">
+    <div className="grid h-full gap-4 lg:grid-cols-[1.15fr_.85fr]">
+      <div className="grid min-h-0 grid-rows-[1fr_auto] gap-3">
+        <article
+          className="relative mx-auto grid min-h-0 w-full max-w-[520px] grid-rows-[auto_1fr_auto] overflow-hidden border-[6px] border-slate-950 bg-white shadow-phone"
+          tabIndex={0}
+          role="region"
+          aria-label="北海道フェアの4枚カルーセル投稿例"
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowRight') { event.stopPropagation(); move(index + 1); }
+            if (event.key === 'ArrowLeft') { event.stopPropagation(); move(index - 1); }
+          }}
+          onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }}
+          onTouchEnd={(event) => {
+            if (touchStart.current === null) return;
+            const delta = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current;
+            if (Math.abs(delta) > 45) move(index + (delta < 0 ? 1 : -1));
+            touchStart.current = null;
+          }}
+        >
+          <div className="flex items-center gap-2 border-b border-slate-100 px-3 py-2">
+            <span className="h-7 w-7 rounded-full bg-brand-700" />
+            <div className="min-w-0">
+              <p className="truncate text-[10px] font-black text-slate-950">coachandfour_wakabadai</p>
+              <p className="text-[8px] font-bold text-slate-400">北海道フェア｜カルーセル投稿</p>
+            </div>
+            <span className="ml-auto text-[10px] font-black text-slate-400">{index + 1} / {carousel.length}</span>
+          </div>
+          <div className="relative min-h-0 overflow-hidden bg-white">
+            <RealImage src={active.src} alt={active.alt} className="h-full w-full object-cover" />
+            <button type="button" onClick={() => move(index - 1)} aria-label="前の画像" className="absolute left-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-slate-950 shadow-sm">
+              <ChevronLeft size={18} />
+            </button>
+            <button type="button" onClick={() => move(index + 1)} aria-label="次の画像" className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-slate-950 shadow-sm">
+              <ChevronRight size={18} />
+            </button>
+            <span className="absolute left-3 top-3 bg-amber-300 px-3 py-2 text-[10px] font-black text-slate-950">{active.label}</span>
+          </div>
+          <div className="border-t border-slate-100 px-3 py-2">
+            <div className="flex justify-center gap-1.5" aria-label={`現在 ${index + 1} 枚目`}>
+              {carousel.map((slide, dot) => (
+                <button
+                  type="button"
+                  key={slide.label}
+                  onClick={() => setIndex(dot)}
+                  aria-label={`${dot + 1}枚目へ`}
+                  className={`h-2 rounded-full transition-all ${dot === index ? 'w-6 bg-brand-700' : 'w-2 bg-slate-300'}`}
+                />
+              ))}
+            </div>
+            <p className="mt-2 text-center text-xs font-black text-slate-700">{active.detail}</p>
+          </div>
+        </article>
+        <div className="grid grid-cols-4 gap-2">
+          {carousel.map((slide, slideIndex) => (
+            <button key={slide.label} type="button" onClick={() => setIndex(slideIndex)} className={`grid grid-rows-[1fr_auto] overflow-hidden border bg-white text-left transition ${slideIndex === index ? 'border-brand-700 shadow-card' : 'border-slate-200'}`}>
+              <div className="min-h-0 overflow-hidden"><RealImage src={slide.src} alt={slide.alt} className="h-full w-full object-cover" /></div>
+              <div className="p-2">
+                <p className="text-[9px] font-black text-brand-700">{slide.label}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+      <aside className="flex flex-col justify-center bg-slate-950 p-5 text-white">
         <p className="text-xs font-black text-amber-300">研修上の目安：ひと目で分かる</p>
-        {['何の投稿？', 'なぜ今？', '主役はどれ？'].map((item, index) => <div key={item} className="mt-3 flex items-center gap-3 border-b border-white/15 pb-3"><span className="text-xl font-black text-white/25">0{index + 1}</span><b>{item}</b></div>)}
+        {['何の投稿？', 'なぜ今？', '主役はどれ？', '端に重要な文字を置いていない？'].map((item, index) => <div key={item} className="mt-3 flex items-center gap-3 border-b border-white/15 pb-3"><span className="text-xl font-black text-white/25">0{index + 1}</span><b>{item}</b></div>)}
+        <div className="mt-5 border-l-4 border-amber-300 bg-white/10 p-3 text-xs font-bold leading-relaxed text-white/80">
+          タイトル、商品名、日付、イベント名は中央付近へ。プロフィールグリッドで見切れにくくなり、ホーム画面も整って見えます。
+        </div>
+        <div className="mt-4 grid grid-cols-[auto_1fr] items-center gap-2 text-xs font-black text-white/75">
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-brand-500 text-white">1</span><span>止める</span>
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-white/15 text-white">2</span><span>詳しく</span>
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-white/15 text-white">3</span><span>納得</span>
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-white/15 text-white">4</span><span>来店へ</span>
+        </div>
       </aside>
     </div>
   );
 }
 
-function FirstImageCard({ media, bad = false }: { media: string; bad?: boolean }) {
-  return (
-    <article className={`relative min-h-[290px] overflow-hidden border-4 ${bad ? 'border-slate-300 bg-slate-100' : 'border-brand-700 bg-brand-700'}`}>
-      <RealImage src={media} alt={bad ? '教材用に情報を弱く加工した実投稿写真' : '具体的な見出しを加えた実投稿写真'} className={`absolute inset-0 h-full w-full object-cover ${bad ? 'scale-75 opacity-45 grayscale' : 'scale-105'}`} />
-      <span className={`absolute inset-0 ${bad ? 'bg-slate-100/35' : 'bg-gradient-to-t from-brand-950/90 via-transparent to-transparent'}`} />
-      <span className={`absolute left-3 top-3 px-2 py-1 text-[9px] font-black ${bad ? 'bg-white text-slate-500' : 'bg-amber-300 text-slate-950'}`}>{bad ? '演習用・改善前' : '教材用・改善後イメージ'}</span>
-      <p className={`absolute inset-x-4 ${bad ? 'top-1/2 text-center text-sm text-slate-400' : 'bottom-4 text-2xl text-white'} font-black leading-tight`}>{bad ? 'お知らせ' : '本日入荷｜北海道限定'}</p>
-      {bad && <div className="absolute bottom-3 left-3 right-3 grid grid-cols-2 gap-2 text-center text-[9px] font-black text-rose-700"><span className="bg-white/90 px-2 py-1">文字が弱い</span><span className="bg-white/90 px-2 py-1">主役が小さい</span></div>}
-      {!bad && <><span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white text-brand-700"><Check size={20} /></span><span className="absolute bottom-14 left-4 bg-white/95 px-2 py-1 text-[10px] font-black text-brand-900">マルシェ売場で展開中</span></>}
-    </article>
-  );
-}
-
 export function SwipeCarouselLesson() {
-  const [index, setIndex] = useState(0);
-  const touchStart = useRef<number | null>(null);
-  const slides = [
-    { label: '止める', headline: '本日入荷｜北海道限定', detail: 'ひと目で内容を伝える' },
-    { label: '詳しく', headline: '爽やかな味わい', detail: '特徴を短く整理する' },
-    { label: '納得', headline: '休憩時間のおともに', detail: '使う場面を見せる' },
-    { label: '来店へ', headline: 'マルシェ売場で展開中', detail: '場所と行動を伝える' },
+  const patternOptions = [
+    {
+      id: 'new',
+      label: '新商品',
+      title: '新商品',
+      description: '商品を大きく見せて、「入荷しました」「本日入荷」を短く伝える型。',
+      structure: '商品を大きく見せる＋「入荷しました」',
+      note: '1枚投稿にも使いやすい',
+      image: '/assets/generated/pattern-new-item.webp',
+      alt: '文具の新商品入荷を伝えるInstagramフィード1枚目のサンプル',
+      imageLabel: '文具の新商品',
+    },
+    {
+      id: 'event',
+      label: 'イベント',
+      title: 'イベント',
+      description: '日付を大きく見せて、イベント名をひと目で伝える型。',
+      structure: '日付を大きく＋イベント名',
+      note: '開催日が埋もれないことが重要',
+      image: '/assets/generated/pattern-event-book.webp',
+      alt: '書籍イベントの日付を大きく見せるInstagramフィード1枚目のサンプル',
+      imageLabel: '書籍イベント',
+    },
+    {
+      id: 'fair',
+      label: 'フェア',
+      title: 'フェア',
+      description: '売場や複数商品を見せながら、フェア名と「開催中」を伝える型。',
+      structure: '売場写真＋フェア名＋「開催中」',
+      note: '売場の雰囲気が伝わると強い',
+      image: '/assets/generated/pattern-fair-hokkaido.webp',
+      alt: '北海道フェア開催中を伝えるInstagramフィード1枚目のサンプル',
+      imageLabel: '北海道フェア',
+    },
+    {
+      id: 'ranking',
+      label: 'ランキング／おすすめ',
+      title: 'ランキング・おすすめ',
+      description: '「おすすめ5選」などの見出しで、続きが気になる形にする型。',
+      structure: '「おすすめ5選」＋複数商品',
+      note: 'カルーセルの1枚目と相性が良い',
+      image: '/assets/generated/pattern-ranking-books.webp',
+      alt: 'スタッフおすすめ書籍5選を伝えるInstagramフィード1枚目のサンプル',
+      imageLabel: 'おすすめ5選',
+    },
+    {
+      id: 'bonus',
+      label: '特典付き商品',
+      title: '特典付き商品',
+      description: '特典があることを大きく見せて、購入理由をひと目で伝える型。',
+      structure: '「特典あり」を大きく＋商品',
+      note: '特典内容は短く、詳しくは2枚目以降やキャプションへ',
+      image: '/assets/generated/pattern-benefit-music.webp',
+      alt: 'CD音楽商品の特典ありを伝えるInstagramフィード1枚目のサンプル',
+      imageLabel: '特典付き商品',
+    },
+    {
+      id: 'reserve',
+      label: '予約受付',
+      title: '予約受付',
+      description: '「予約受付中」を大きく見せて、今行動してほしいことを伝える型。',
+      structure: '「予約受付中」を目立たせる＋商品名',
+      note: '発売日や締切がある場合は中央付近に短く入れる',
+      image: '/assets/generated/pattern-reservation.webp',
+      alt: '話題作の予約受付中を伝えるInstagramフィード1枚目のサンプル',
+      imageLabel: '予約受付中',
+    },
+  ] as const;
+  const [activePattern, setActivePattern] = useState<(typeof patternOptions)[number]['id']>('ranking');
+  const current = patternOptions.find((pattern) => pattern.id === activePattern) ?? patternOptions[3];
+  const flow = [
+    ['1', '止める', 'ひと目で内容を伝える'],
+    ['2', '詳しく', 'ジャンル感を把握する'],
+    ['3', '納得', '楽しみ方を見せる'],
+    ['4', '来店へ', '場所と行動を伝える'],
   ];
-  const move = (next: number) => setIndex((next + slides.length) % slides.length);
 
   return (
-    <div className="grid h-full gap-5 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
-      <div
-        className="mx-auto w-full max-w-[300px]"
-        tabIndex={0}
-        role="region"
-        aria-label="4枚のカルーセル教材"
-        onKeyDown={(event) => {
-          if (event.key === 'ArrowRight') { event.stopPropagation(); move(index + 1); }
-          if (event.key === 'ArrowLeft') { event.stopPropagation(); move(index - 1); }
-        }}
-        onTouchStart={(event) => { touchStart.current = event.touches[0]?.clientX ?? null; }}
-        onTouchEnd={(event) => {
-          if (touchStart.current === null) return;
-          const delta = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current;
-          if (Math.abs(delta) > 45) move(index + (delta < 0 ? 1 : -1));
-          touchStart.current = null;
-        }}
-      >
-        <div className="relative aspect-[4/5] overflow-hidden border-[6px] border-slate-950 bg-white shadow-phone">
-          <RealImage src={food.media ?? food.path} alt="ヨーグルッペの実在写真を使ったカルーセル教材" className={`absolute inset-0 h-full w-full object-cover transition-transform duration-300 ${index === 0 ? 'scale-105' : index === 1 ? 'scale-125' : index === 2 ? 'scale-110' : 'scale-100'}`} />
-          <span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-transparent to-transparent" />
-          <span className="absolute left-4 top-4 bg-white px-2 py-1 text-[9px] font-black text-brand-800">{index + 1} / 4</span>
-          <div className="absolute inset-x-5 bottom-5 text-white"><p className="text-[10px] font-black text-amber-300">{slides[index].label}</p><h3 className="mt-1 text-2xl font-black leading-tight">{slides[index].headline}</h3><p className="mt-2 text-xs text-white/80">{slides[index].detail}</p></div>
+    <div className="grid h-full gap-4 lg:grid-cols-[.78fr_1.22fr] lg:items-center">
+      <div className="mx-auto w-full max-w-[300px]">
+        <div className="overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-white shadow-phone">
+          <div className="flex h-7 items-center justify-between px-4 text-[8px] font-black"><span>14:21</span><span>● ● ▰</span></div>
+          <div className="flex items-center gap-2 border-y border-slate-100 px-3 py-2"><span className="h-6 w-6 rounded-full bg-brand-700" /><span className="text-[9px] font-bold">coachandfour_wakabadai</span></div>
+          <div className="relative aspect-square overflow-hidden bg-white">
+            <RealImage src={current.image} alt={current.alt} className="absolute inset-0 h-full w-full object-cover" />
+            <span className="pointer-events-none absolute inset-[13%] border border-dashed border-white/80 shadow-[0_0_0_999px_rgba(15,23,42,.08)]" />
+            <span className="absolute left-1/2 top-[13%] -translate-x-1/2 bg-white/90 px-2 py-1 text-[8px] font-black text-brand-800">中央の安全エリア</span>
+          </div>
+          <div className="flex justify-between p-3"><span className="flex gap-2"><Heart size={15} /><MessageCircle size={15} /><Send size={15} /></span><span className="text-[9px] font-bold">{current.imageLabel}</span></div>
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <button type="button" onClick={() => move(index - 1)} aria-label="前の画像" className="grid h-9 w-9 place-items-center border border-slate-200 bg-white"><ChevronLeft size={18} /></button>
-          <div className="flex gap-1.5" aria-label={`現在 ${index + 1} 枚目`}>{slides.map((slide, dot) => <button type="button" key={slide.label} onClick={() => setIndex(dot)} aria-label={`${dot + 1}枚目へ`} className={`h-2 ${dot === index ? 'w-6 bg-brand-700' : 'w-2 bg-slate-300'} transition-all`} />)}</div>
-          <button type="button" onClick={() => move(index + 1)} aria-label="次の画像" className="grid h-9 w-9 place-items-center border border-slate-200 bg-white"><ChevronRight size={18} /></button>
+        <div className="mt-2 border-l-4 border-amber-400 bg-brand-50 p-3 text-xs font-black leading-relaxed text-brand-950">
+          大事な文字は中央へ。タイトル・商品名・日付・イベント名は端に置かない。
         </div>
       </div>
-      <div className="relative grid grid-cols-4 gap-2">
-        <span className="absolute left-[8%] right-[8%] top-5 h-px bg-brand-200" />
-        {slides.map((slide, step) => <button type="button" key={slide.label} onClick={() => setIndex(step)} className="relative text-center"><span className={`mx-auto grid h-10 w-10 place-items-center border-2 text-xs font-black ${step === index ? 'border-brand-700 bg-brand-700 text-white' : 'border-brand-200 bg-white text-brand-700'}`}>{step + 1}</span><b className="mt-2 block text-xs">{slide.label}</b><span className="mt-1 block text-[9px] leading-snug text-slate-500">{slide.detail}</span></button>)}
-        <div className="col-span-4 mt-5 border-l-4 border-amber-400 bg-slate-950 p-4 text-white">
-          <p className="text-lg font-black">1枚目で止め、2〜4枚目で来店へ。</p>
-          <p className="mt-1 text-xs text-white/65">矢印キー・ボタン・スマホのスワイプで操作できます。</p>
+      <div className="grid min-h-0 gap-2.5">
+        <div className="relative grid grid-cols-4 gap-2">
+          <span className="absolute left-[8%] right-[8%] top-5 h-px bg-brand-200" />
+          {flow.map(([number, label, detail]) => (
+            <div key={number} className="relative text-center">
+              <span className="mx-auto grid h-10 w-10 place-items-center border-2 border-brand-700 bg-brand-700 text-xs font-black text-white">{number}</span>
+              <b className="mt-2 block text-xs">{label}</b>
+              <span className="mt-1 block text-[9px] leading-snug text-slate-500">{detail}</span>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="border border-brand-200 bg-brand-50 p-3">
+            <p className="text-[10px] font-black text-brand-700">複数枚投稿</p>
+            <p className="mt-1 text-xs font-black text-slate-950">1枚目で止める → 2〜4枚目で詳しく → 来店へ</p>
+          </div>
+          <div className="border border-slate-200 bg-white p-3">
+            <p className="text-[10px] font-black text-slate-500">1枚投稿</p>
+            <p className="mt-1 text-xs font-black text-slate-950">1枚で要点を伝える。詳しい説明はキャプションへ。</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {patternOptions.map((pattern) => (
+            <button
+              type="button"
+              key={pattern.id}
+              onClick={() => setActivePattern(pattern.id)}
+              className={`px-2 py-1.5 text-xs font-black transition ${pattern.id === activePattern ? 'bg-brand-700 text-white shadow-card' : 'border border-slate-200 bg-white text-slate-600'}`}
+            >
+              {pattern.label}
+            </button>
+          ))}
+        </div>
+        <div className="border-l-4 border-brand-600 bg-brand-50 p-3">
+          <p className="text-[10px] font-black text-brand-700">目的ごとの1枚目の型</p>
+          <h3 className="mt-1 text-2xl font-black text-slate-950">{current.title}</h3>
+          <p className="mt-1.5 text-sm font-bold leading-relaxed text-slate-600">{current.description}</p>
+          <div className="mt-2 grid grid-cols-[auto_1fr] gap-2 text-xs font-bold">
+            <span className="bg-white px-2 py-2 text-brand-700">推奨構成</span><span className="bg-white px-2 py-2 text-slate-950">{current.structure}</span>
+            <span className="bg-white px-2 py-2 text-brand-700">補足</span><span className="bg-white px-2 py-2 text-slate-950">{current.note}</span>
+          </div>
+        </div>
+        <div className="border border-amber-200 bg-amber-50 p-3 text-xs font-bold leading-relaxed text-amber-950">
+          端に置いた文字は、プロフィール一覧で見切れることがあります。重要情報は中央付近に置きましょう。
+        </div>
+        <div className="border-l-4 border-amber-400 bg-slate-950 p-3 text-white">
+          <p className="text-base font-black">型があると、速く・迷わず・伝わる。大事な文字は中央に置く。</p>
         </div>
       </div>
     </div>
