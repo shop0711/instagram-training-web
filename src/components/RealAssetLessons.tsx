@@ -124,32 +124,41 @@ export function RealPostGrid() {
 }
 
 export function RealPhotoCompare() {
-  const source = assetById.img_4823;
-  const media = source.media ?? source.path;
   return (
     <div className="grid h-full gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
-      <PhotoLesson label="演習用・改善前" media={media} bad />
+      <PhotoLesson
+        label="演習用・改善前"
+        media="/assets/generated/photo-basics-before.webp"
+        alt="暗く、主役が遠く、背景や色味が目立ち、水平がずれた売場写真の改善前サンプル"
+        bad
+      />
       <div className="hidden items-center lg:flex"><ArrowRight className="text-brand-500" size={28} /></div>
-      <PhotoLesson label="教材用・改善後イメージ" media={media} />
+      <PhotoLesson
+        label="教材用・改善後イメージ"
+        media="/assets/generated/photo-basics-after.webp"
+        alt="明るく、主役が大きく、背景と色味が自然で水平が整った売場写真の改善後サンプル"
+      />
     </div>
   );
 }
 
-function PhotoLesson({ label, media, bad = false }: { label: string; media: string; bad?: boolean }) {
-  const points = bad ? ['暗くする', '主役が遠い', '背景が目立つ'] : ['明るく補正', '主役を大きく', '背景を整理'];
+function PhotoLesson({ label, media, alt, bad = false }: { label: string; media: string; alt: string; bad?: boolean }) {
+  const points = bad
+    ? ['暗い', '主役が遠い', '背景が目立つ', '画質が荒い', '色味を加工しすぎ', '水平がずれている']
+    : ['明るく補正', '主役を大きく見せる', '背景を整理', '画質を保つ', '色味は自然に整える', '水平をまっすぐにする'];
   return (
     <article className={`grid min-h-0 grid-rows-[1fr_auto] border ${bad ? 'border-rose-200 bg-rose-50' : 'border-emerald-200 bg-emerald-50'}`}>
       <div className={`relative min-h-[260px] overflow-hidden ${bad ? 'bg-slate-800' : 'bg-white'}`}>
         <RealImage
           src={media}
-          alt={`${label}として加工した同一の北海道商品売場写真`}
-          className={`absolute inset-0 h-full w-full object-cover ${bad ? 'scale-75 rotate-2 brightness-[.38] saturate-50' : 'scale-110 brightness-105'}`}
+          alt={alt}
+          className="absolute inset-0 h-full w-full object-cover"
         />
         {bad && <span className="absolute inset-0 bg-slate-950/15" />}
         <span className={`absolute left-3 top-3 px-3 py-2 text-xs font-black text-white ${bad ? 'bg-rose-600' : 'bg-emerald-600'}`}>{label}</span>
-        <span className={`absolute bottom-3 left-3 px-3 py-2 text-sm font-black shadow-lg ${bad ? 'bg-slate-950/85 text-white' : 'bg-white text-slate-950'}`}>{bad ? '何を見せたい？' : '短い見出しで伝える'}</span>
+        <span className={`absolute bottom-3 left-3 max-w-[82%] px-3 py-2 text-sm font-black shadow-lg ${bad ? 'bg-slate-950/85 text-white' : 'bg-white text-slate-950'}`}>{bad ? '何を見せたいか迷う' : '見せたいものがすぐ分かる'}</span>
       </div>
-      <div className="grid grid-cols-3 gap-2 p-3">
+      <div className="grid grid-cols-2 gap-2 p-3 lg:grid-cols-3">
         {points.map((point) => <span key={point} className="flex items-center justify-center gap-1 bg-white px-2 py-2 text-[10px] font-black">{bad ? <X size={13} className="text-rose-500" /> : <Check size={13} className="text-emerald-600" />}{point}</span>)}
       </div>
     </article>
