@@ -227,7 +227,7 @@ export const trainingSlides: SlideData[] = [
     kind: 'five-steps',
     eyebrow: 'MESSAGE DESIGN',
     title: '1投稿1テーマで伝える',
-    description: '一度にたくさん伝えるより、一つの来店理由を明確にします。',
+    description: '一度にたくさん伝えるより、ひとつの来店理由を明確にします。',
     cards: [
       { title: '何がある？', description: '商品・フェア・イベント' },
       { title: '誰におすすめ？', description: '家族、学生、ファンなど' },
@@ -235,9 +235,9 @@ export const trainingSlides: SlideData[] = [
       { title: 'いつまで？', description: '期間・数量・開催日時' },
       { title: 'なぜ今？', description: '限定、週末、再入荷' }
     ],
-    keyPhrase: '一つの投稿に、一つの「行く理由」。',
+    keyPhrase: '1投稿に詰め込むのは、情報ではなく“行く理由”ひとつ。',
     speakerNote:
-      '投稿文がまとまらないときは、この5項目を順番に確認します。すべてを1枚目に入れず、詳細は2枚目以降やキャプションへ分けます。'
+      '新商品、イベント、キャンペーン、おすすめ商品を1つの投稿にまとめると、何を伝えたいのか分かりにくくなります。投稿前に「何があるか」「誰におすすめか」「どこにあるか」「いつまでか」「なぜ今行くべきか」を確認すると、伝わりやすい投稿になります。Instagramでは、長い文章を書くことよりも、来店したくなる理由をシンプルに伝えることが大切です。'
   },
   {
     id: 'photo-basics',

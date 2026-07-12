@@ -242,21 +242,72 @@ function StoreIdeaMap() {
 }
 
 function OneTheme() {
-  const steps = ['何がある','誰向け','どこ','いつまで','なぜ今'];
+  const checks = [
+    ['1', '何がある？', '親子イベント'],
+    ['2', '誰におすすめ？', '親子連れのお客様'],
+    ['3', '店内のどこにある？', '児童書売場'],
+    ['4', 'いつまで？', '7/18開催'],
+    ['5', 'なぜ今行くべき？', '今週末限定で参加できる'],
+  ];
   return (
-    <div className="grid h-full gap-5 lg:grid-cols-[.82fr_1.18fr]">
-      <div className="grid grid-cols-2 gap-3">
-        <MiniPost bad title="全部まとめてお知らせ" tags={['新商品','フェア','イベント','予約','ランキング']} />
-        <MiniPost title="今週末｜親子イベント" tags={['7/18開催','児童書売場']} />
+    <div className="grid h-full gap-5 lg:grid-cols-[1.18fr_.82fr]">
+      <div className="grid min-h-0 grid-cols-2 gap-3">
+        <OneThemePostImage
+          tone="bad"
+          label="NG 情報過多"
+          src="/assets/generated/one-theme-ng.webp"
+          alt="新商品、イベント、フェア、予約、ランキングが混在した情報過多の投稿サンプル"
+          caption="話題が多く、何を見ればいいか迷う"
+        />
+        <OneThemePostImage
+          tone="good"
+          label="OK 1テーマ"
+          src="/assets/generated/one-theme-ok.webp"
+          alt="今週末の親子イベントにテーマを絞った投稿サンプル"
+          caption="誰向け・場所・日付が一目で分かる"
+        />
       </div>
-      <div className="flex flex-col justify-center border border-brand-200 bg-brand-50/60 p-5">
-        <p className="text-xs font-black text-brand-700">MESSAGE FILTER</p>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {steps.map((step,i)=><div key={step} className="contents"><span className="bg-white px-3 py-2 text-xs font-black shadow-sm"><b className="mr-1 text-brand-600">{i+1}</b>{step}</span>{i<4&&<ChevronRight size={14} className="text-brand-400"/>}</div>)}
+      <div className="flex min-h-0 flex-col justify-center border border-brand-200 bg-brand-50/60 p-5">
+        <p className="text-xs font-black text-brand-700">投稿前の5つの確認</p>
+        <div className="mt-4 grid gap-2">
+          {checks.map(([number, question]) => (
+            <div key={number} className="flex items-center gap-2 bg-white px-3 py-2 text-sm font-black shadow-sm">
+              <span className="grid h-7 w-7 shrink-0 place-items-center bg-brand-700 text-xs text-white">{number}</span>
+              <span>{question}</span>
+            </div>
+          ))}
         </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-brand-200 pt-4"><Target className="text-brand-700"/><p className="text-lg font-black">一つの投稿に、一つの「行く理由」</p></div>
+        <div className="mt-4 border border-brand-200 bg-white p-4">
+          <p className="text-[10px] font-black text-brand-700">5つを使った投稿の考え方例</p>
+          <div className="mt-3 grid gap-1.5 text-xs font-bold text-slate-700">
+            {checks.map(([, question, answer]) => (
+              <p key={question} className="flex gap-2">
+                <span className="min-w-[8.5em] text-slate-500">{question}</span>
+                <ChevronRight size={14} className="mt-0.5 shrink-0 text-brand-400" />
+                <span className="text-slate-950">{answer}</span>
+              </p>
+            ))}
+          </div>
+        </div>
+        <div className="mt-5 flex items-center gap-3 border-t border-brand-200 pt-4"><Target className="text-brand-700"/><p className="text-lg font-black">1投稿に詰め込むのは、情報ではなく「行く理由」ひとつ。</p></div>
       </div>
     </div>
+  );
+}
+
+function OneThemePostImage({ tone, label, src, alt, caption }: { tone: 'bad' | 'good'; label: string; src: string; alt: string; caption: string }) {
+  const isGood = tone === 'good';
+  return (
+    <article className={`grid min-h-0 grid-rows-[auto_1fr_auto] overflow-hidden border ${isGood ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
+      <div className="flex items-center justify-between px-3 py-2">
+        <StatusLabel tone={isGood ? 'good' : 'muted'}>{label}</StatusLabel>
+        <span className={`text-[10px] font-black ${isGood ? 'text-emerald-700' : 'text-rose-700'}`}>{isGood ? '1つに絞る' : '詰め込みすぎ'}</span>
+      </div>
+      <div className="min-h-0 overflow-hidden bg-white">
+        <img src={src} alt={alt} width="1100" height="1100" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+      </div>
+      <p className={`px-3 py-2 text-xs font-black ${isGood ? 'text-emerald-900' : 'text-rose-900'}`}>{caption}</p>
+    </article>
   );
 }
 
@@ -365,8 +416,6 @@ function RolePanel({icon:Icon,label,metaphor,audience,color,items}:{icon:LucideI
     <div className="mt-4 grid grid-cols-3 gap-2">{items.map(x=><span key={x} className="bg-white p-3 text-center text-xs font-bold shadow-sm">{x}</span>)}</div>
   </div>;
 }
-
-function MiniPost({bad,title,tags}:{bad?:boolean;title:string;tags:string[]}) { return <div className={`relative overflow-hidden border p-3 ${bad?'border-rose-200 bg-rose-50':'border-emerald-200 bg-emerald-50'}`}><StatusLabel tone={bad?'muted':'good'}>{bad?'NG 情報過多':'OK 1テーマ'}</StatusLabel><div className={`mt-3 aspect-square p-3 ${bad?'bg-slate-200':'bg-brand-700 text-white'}`}><p className={`${bad?'text-sm text-slate-500':'text-xl'} font-black`}>{title}</p><div className="mt-4 flex flex-wrap gap-1">{tags.map(x=><span key={x} className={`px-1.5 py-1 text-[9px] ${bad?'bg-white text-slate-500':'bg-white/15 text-white'}`}>{x}</span>)}</div></div></div>; }
 
 function RoleSplit({title,icon:Icon,tone,items}:{title:string;icon:LucideIcon;tone:'dark'|'brand';items:string[]}) { return <div className={`p-5 ${tone==='dark'?'bg-slate-950 text-white':'bg-brand-50 text-slate-950 border border-brand-200'}`}><Icon size={28} className={tone==='dark'?'text-amber-300':'text-brand-700'}/><h3 className="mt-3 text-xl font-black">{title}</h3><div className="mt-4 grid grid-cols-2 gap-2">{items.map(x=><span key={x} className={`p-2 text-xs font-bold ${tone==='dark'?'bg-white/10':'bg-white'}`}>{x}</span>)}</div></div>; }
 
