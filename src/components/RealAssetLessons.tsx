@@ -170,18 +170,51 @@ type Format = 'feed' | 'stories' | 'reels';
 export function RealFormatGuide() {
   const [active, setActive] = useState<Format>('feed');
   const formats = {
-    feed: { label: 'フィード', icon: Grid3X3, headline: '保存版｜北海道フェア', note: '残す情報', examples: ['複数商品', 'イベント詳細', 'おすすめ5選'] },
-    stories: { label: 'ストーリーズ', icon: Clock3, headline: '本日開催中', note: '今伝える情報', examples: ['本日入荷', '残りわずか', '今日の売場'] },
-    reels: { label: 'リール', icon: Film, headline: '売場を15秒で紹介', note: '雰囲気を伝える', examples: ['展開風景', 'スタッフ目線', '店内の空気'] },
+    feed: {
+      label: 'フィード',
+      icon: Grid3X3,
+      headline: '保存版｜北海道フェアおすすめ5選',
+      note: '残す情報',
+      role: '複数枚投稿の顔として、後から見返せる情報を残す場所',
+      image: '/assets/generated/format-feed.webp',
+      alt: '北海道フェアおすすめ5選の複数枚投稿で顔になる1枚目のフィード投稿サンプル',
+      examples: ['表紙になる1枚目', '大型フェア', 'イベント詳細', '新商品まとめ', 'おすすめ5選', '予約受付'],
+      caseTitle: '保存版｜北海道フェアおすすめ5選',
+      caseText: '1枚目でテーマを伝え、2枚目以降で詳しく見せる。',
+    },
+    stories: {
+      label: 'ストーリーズ',
+      icon: Clock3,
+      headline: '抽選結果発表',
+      note: '今だけ',
+      role: '今だけ必要な情報を気軽に届ける場所',
+      image: '/assets/generated/format-stories.webp',
+      alt: '抽選結果発表を知らせるストーリーズ投稿サンプル',
+      examples: ['本日入荷', '試食会開催中', '抽選結果', '残りわずか', '今日だけのお知らせ', '売場の変化'],
+      caseTitle: '抽選結果発表 / 本日入荷',
+      caseText: '24時間で十分な、一時的なお知らせに向いています。',
+    },
+    reels: {
+      label: 'リール',
+      icon: Film,
+      headline: '北海道フェアを30秒で紹介',
+      note: '雰囲気・動き・体験',
+      role: '雰囲気や動きが伝わりやすく、目に留まりやすい投稿形式',
+      image: '/assets/generated/format-reels.webp',
+      alt: '北海道フェアの売場を歩いて紹介するリール投稿サンプル',
+      examples: ['売場を歩く', 'フェアの雰囲気', '商品を手に取る', 'イベント準備', '店内の楽しさ'],
+      caseTitle: '売場を歩いて北海道フェアを紹介',
+      caseText: '写真だけでは伝わらない空気感を見せる。慣れてから挑戦で大丈夫です。',
+    },
   } as const;
   const current = formats[active];
 
   return (
     <div className="grid h-full gap-5 lg:grid-cols-[.82fr_1.18fr]">
       <div className="flex items-center justify-center">
-        <FormatPhone mode={active} headline={current.headline} />
+        <FormatPhone mode={active} headline={current.headline} image={current.image} alt={current.alt} />
       </div>
-      <div className="flex flex-col justify-center">
+      <div className="flex min-h-0 flex-col justify-center">
         <div className="grid grid-cols-3 border border-slate-200 bg-white p-1" role="tablist" aria-label="投稿形式">
           {(Object.keys(formats) as Format[]).map((key) => {
             const Icon = formats[key].icon;
@@ -190,30 +223,51 @@ export function RealFormatGuide() {
         </div>
         <div className="mt-4 border-l-4 border-brand-600 bg-brand-50 p-5">
           <p className="text-xs font-black text-brand-700">{current.note}</p>
-          <h3 className="mt-1 text-2xl font-black">同じ売場でも、役割で切り取る。</h3>
-          <div className="mt-4 grid grid-cols-3 gap-2">{current.examples.map((item) => <span key={item} className="bg-white p-2 text-center text-xs font-bold">{item}</span>)}</div>
+          <h3 className="mt-1 text-2xl font-black">{current.role}</h3>
+          <div className="mt-4 grid grid-cols-3 gap-2">{current.examples.map((item) => <span key={item} className="bg-white p-2 text-center text-[11px] font-bold">{item}</span>)}</div>
         </div>
+        <div className="mt-4 grid grid-cols-[1fr_auto] gap-3">
+          <div className="border border-slate-200 bg-white p-4">
+            <p className="text-[10px] font-black text-brand-700">北海道フェアの場合</p>
+            <h4 className="mt-1 text-base font-black text-slate-950">{current.caseTitle}</h4>
+            <p className="mt-1 text-xs font-bold leading-relaxed text-slate-600">{current.caseText}</p>
+          </div>
+          <div className="grid min-w-[165px] gap-1.5 text-[10px] font-black text-slate-700">
+            <span className={`border-l-4 bg-white p-2 ${active === 'feed' ? 'border-blue-500 text-brand-800 shadow-sm' : 'border-slate-200'}`}>後から見返す？ → フィード</span>
+            <span className={`border-l-4 bg-white p-2 ${active === 'stories' ? 'border-amber-400 text-brand-800 shadow-sm' : 'border-slate-200'}`}>今だけでよい？ → ストーリーズ</span>
+            <span className={`border-l-4 bg-white p-2 ${active === 'reels' ? 'border-rose-500 text-brand-800 shadow-sm' : 'border-slate-200'}`}>雰囲気を見せる？ → リール</span>
+          </div>
+        </div>
+        {active === 'stories' && (
+          <div className="mt-3 bg-amber-50 p-3 text-xs font-bold leading-relaxed text-amber-950">
+            抽選結果は対象のお客様には必要な情報です。ただし後から見た人には関係が薄く、フィードに残るとノイズになりやすいため、24時間で消えるストーリーズが向いています。
+          </div>
+        )}
+        {active === 'reels' && (
+          <div className="mt-3 bg-slate-950 p-3 text-xs font-bold leading-relaxed text-white">
+            リールは伸びやすい反面、作成には少し手間がかかります。まずはフィードとストーリーズを安定して投稿し、慣れてきたら挑戦する順番で大丈夫です。
+          </div>
+        )}
         <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-black">
-          <span className="border-t-4 border-blue-500 p-2">残す</span><span className="border-t-4 border-amber-400 p-2">今</span><span className="border-t-4 border-rose-500 p-2">体験</span>
+          <span className="border-t-4 border-blue-500 p-2">残す情報</span><span className="border-t-4 border-amber-400 p-2">今だけ</span><span className="border-t-4 border-rose-500 p-2">雰囲気</span>
         </div>
       </div>
     </div>
   );
 }
 
-function FormatPhone({ mode, headline }: { mode: Format; headline: string }) {
-  const media = food.media ?? food.path;
+function FormatPhone({ mode, headline, image, alt }: { mode: Format; headline: string; image: string; alt: string }) {
   const portrait = mode !== 'feed';
   return (
     <div className={`relative mx-auto overflow-hidden rounded-[2rem] border-[6px] border-slate-950 bg-white shadow-phone ${portrait ? 'aspect-[9/16] w-[205px]' : 'w-[235px]'}`}>
       <div className="flex h-7 items-center justify-between px-4 text-[8px] font-black"><span>14:21</span><span>● ● ▰</span></div>
       {mode === 'feed' && <div className="flex items-center gap-2 border-y border-slate-100 px-3 py-2"><span className="h-6 w-6 rounded-full bg-brand-700" /><span className="text-[9px] font-bold">coachandfour_wakabadai</span></div>}
       <div className={`relative overflow-hidden ${portrait ? 'h-[calc(100%-1.75rem)]' : 'aspect-square'}`}>
-        <RealImage src={media} alt={`実在写真を使った${mode}の表示例`} className="absolute inset-0 h-full w-full object-cover" />
-        <span className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-slate-950/15" />
+        <RealImage src={image} alt={alt} className="absolute inset-0 h-full w-full object-cover" />
+        <span className={`absolute inset-0 ${mode === 'feed' ? 'bg-transparent' : 'bg-gradient-to-t from-slate-950/45 via-transparent to-slate-950/10'}`} />
         {mode === 'stories' && <div className="absolute inset-x-3 top-3 h-1 bg-white/85" />}
         {mode === 'reels' && <Play className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white" fill="white" />}
-        <p className="absolute inset-x-4 bottom-5 text-lg font-black leading-tight text-white">{headline}</p>
+        {mode !== 'feed' && <p className="absolute inset-x-4 bottom-5 text-lg font-black leading-tight text-white">{headline}</p>}
       </div>
       {mode === 'feed' && <div className="flex justify-between p-3"><span className="flex gap-2"><Heart size={15} /><MessageCircle size={15} /><Send size={15} /></span><span className="text-[9px] font-bold">保存版</span></div>}
     </div>
