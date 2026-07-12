@@ -21,6 +21,16 @@ export const timingReasons = [
 export type PostType = (typeof postTypes)[number];
 export type TimingReason = (typeof timingReasons)[number];
 
+export const timingReasonsByType: Record<PostType, readonly TimingReason[]> = {
+  新商品: ['本日入荷', '数量限定', '期間限定', '特典あり'],
+  再入荷: ['本日入荷', '数量限定', '残りわずか'],
+  イベント: ['今週末開催', '期間限定', '予約受付中'],
+  フェア: ['期間限定', '今週末開催', '特典あり'],
+  スタッフおすすめ: ['本日入荷', '数量限定', '期間限定', '残りわずか'],
+  予約受付: ['予約受付中', '期間限定', '特典あり'],
+  限定特典: ['特典あり', '数量限定', '期間限定', '残りわずか'],
+};
+
 export type PostIdeaInput = {
   type: PostType;
   name: string;

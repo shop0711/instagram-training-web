@@ -115,9 +115,6 @@ export function RealPostGrid() {
         <div className="mt-4 flex items-center gap-2 bg-white p-3 text-xs font-bold text-brand-900">
           <MousePointer2 size={16} /> 画像を選ぶと、ネタの正体が見える
         </div>
-        <div className="mt-5 border-t border-brand-200 pt-4">
-          <p className="text-lg font-black text-slate-950">日々の業務そのものが<br /><span className="text-brand-700">コンテンツになる。</span></p>
-        </div>
       </aside>
     </div>
   );

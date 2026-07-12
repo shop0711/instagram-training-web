@@ -22,7 +22,6 @@ import {
   ShieldCheck,
   Sparkles,
   Store,
-  Target,
   Users,
   UtensilsCrossed,
   WandSparkles,
@@ -289,7 +288,6 @@ function OneTheme() {
             ))}
           </div>
         </div>
-        <div className="mt-5 flex items-center gap-3 border-t border-brand-200 pt-4"><Target className="text-brand-700"/><p className="text-lg font-black">1投稿に詰め込むのは、情報ではなく「行く理由」ひとつ。</p></div>
       </div>
     </div>
   );
@@ -336,10 +334,10 @@ function ProfileEntrance() {
 }
 
 function AlgorithmLoop() {
-  const actions=[['視聴',Eye],['保存',Save],['送信',Send],['コメント',MessageCircle]] as const;
+  const actions=[['視聴',Eye],['保存',Save],['シェア（送信）',Send],['コメント',MessageCircle]] as const;
   const metrics=[
     ['保存','後から見返したい情報だったか',Save],
-    ['シェア・送信','家族や友人へ教えたい情報だったか',Send],
+    ['シェア（送信）','家族や友人へ教えたい情報だったか',Send],
     ['プロフィールへの移動','店舗へ興味を持ってもらえたか',CircleUserRound],
     ['店頭での反応','「Instagramを見ました」という声や商品の動き',Store],
   ] as const;
@@ -350,7 +348,7 @@ function AlgorithmLoop() {
         <div className="border border-brand-200 bg-brand-50 p-3">
           <span className="text-[9px] font-black text-brand-600">02 反応が生まれる</span>
           <div className="mt-2 grid grid-cols-4 gap-1">{actions.map(([label,Icon])=><div key={label} className="bg-white p-2 text-center"><Icon size={16} className="mx-auto text-brand-700"/><p className="mt-1 text-[8px] font-black">{label}</p></div>)}</div>
-          <p className="mt-2 text-[10px] font-bold leading-relaxed text-slate-600">視聴時間、いいね、保存、送信、コメントなど</p>
+          <p className="mt-2 text-[10px] font-bold leading-relaxed text-slate-600">視聴時間、いいね、保存、シェア（送信）、コメントなど</p>
         </div>
         <div className="border border-slate-200 bg-white p-3">
           <span className="text-[9px] font-black text-slate-500">03 複数の情報を参考にする</span>
@@ -361,7 +359,7 @@ function AlgorithmLoop() {
           <span className="text-[9px] font-black text-emerald-700">04 表示されることがある</span>
           <Bookmark className="mt-3 text-emerald-700" size={25}/>
           <p className="mt-2 text-sm font-black text-slate-950">興味を持つ可能性がある人へ</p>
-          <p className="mt-1 text-[10px] leading-relaxed text-slate-600">保存やシェアだけで、必ず広がるわけではありません。</p>
+          <p className="mt-1 text-[10px] leading-relaxed text-slate-600">保存やシェア（送信）だけで、必ず広がるわけではありません。</p>
         </div>
       </div>
       <div className="border border-slate-200 bg-slate-50 p-3">

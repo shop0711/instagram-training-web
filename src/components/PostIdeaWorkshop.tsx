@@ -3,7 +3,7 @@ import { Check, Clipboard, Images, RotateCcw, Sparkles, WandSparkles } from 'luc
 import {
   postTypes,
   samplePostIdea,
-  timingReasons,
+  timingReasonsByType,
   type PostIdeaInput,
   type PostType,
   type TimingReason,
@@ -29,6 +29,22 @@ export function PostIdeaWorkshop() {
 
   const update = <Key extends keyof PostIdeaInput>(key: Key, value: PostIdeaInput[Key]) => {
     setInput((current) => ({ ...current, [key]: value }));
+    setResult(null);
+    setMedia(null);
+    setError('');
+  };
+
+  const updateType = (type: PostType) => {
+    setInput((current) => {
+      const reasons = timingReasonsByType[type];
+      return {
+        ...current,
+        type,
+        reason: reasons.includes(current.reason) ? current.reason : reasons[0],
+      };
+    });
+    setResult(null);
+    setMedia(null);
     setError('');
   };
 
@@ -73,11 +89,11 @@ export function PostIdeaWorkshop() {
           </button>
         </div>
 
-        <ChoiceField label="1. 投稿内容の種類" options={postTypes} value={input.type} onChange={(value) => update('type', value as PostType)} />
+        <ChoiceField label="1. 投稿内容の種類" options={postTypes} value={input.type} onChange={(value) => updateType(value as PostType)} />
 
         <TextField label="2. 商品名・イベント名" required value={input.name} placeholder="北海道限定ヨーグルッペ" error={error} onChange={(value) => update('name', value)} />
 
-        <ChoiceField label="3. 今見る理由" options={timingReasons} value={input.reason} onChange={(value) => update('reason', value as TimingReason)} />
+        <ChoiceField label="3. 今見る理由" options={timingReasonsByType[input.type]} value={input.reason} onChange={(value) => update('reason', value as TimingReason)} />
 
         <div className="grid gap-3 sm:grid-cols-2">
           <TextField label="4. どこにありますか？" value={input.location} placeholder="マルシェ売場入口" onChange={(value) => update('location', value)} />
