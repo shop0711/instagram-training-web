@@ -203,9 +203,9 @@ function CustomerLens({ slide }: Props) {
 
 function ExperienceJourney() {
   const experiences = [
-    { icon: BookOpen, label: '本に出会う', detail: '話題の新刊や、休日に読みたい一冊を見つける' },
-    { icon: PenLine, label: '文具を試す', detail: '勉強や仕事が少し楽しくなるアイテムを探す' },
-    { icon: UtensilsCrossed, label: '北海道を味わう', detail: 'おうちで旅行気分を楽しめる食品を選ぶ' },
+    { icon: BookOpen, label: '本に出会う', detail: '休日に読みたい一冊を見つける' },
+    { icon: PenLine, label: '文具を試す', detail: '仕事や勉強が少し楽しくなる文具を選ぶ' },
+    { icon: UtensilsCrossed, label: '北海道を味わう', detail: 'おうちで旅行気分を楽しめる食品を探す' },
     { icon: Music2, label: '音楽を探す', detail: '好きなアーティストや特典付き商品を見つける' },
     { icon: Coffee, label: 'カフェで休む', detail: '買い物の合間に、ゆっくり過ごす' },
   ];
@@ -214,7 +214,11 @@ function ExperienceJourney() {
       <div className="relative min-h-[280px] overflow-hidden border-l-4 border-brand-600">
         <img src={trainingPhotos.books} alt="整理された書籍フェア売場" className="absolute inset-0 h-full w-full object-cover"/>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent"/>
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-[10px] font-black text-amber-300">SUCCESS ACCOUNT</p><p className="mt-2 text-2xl font-black leading-tight">商品紹介から<br/>楽しみ方の提案へ</p><div className="mt-3 flex items-center gap-2 text-xs font-bold"><Sparkles size={17} className="text-amber-300"/>「買う」だけでなく「過ごす」を見せる</div></div>
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+          <p className="text-[10px] font-black text-amber-300">POST IDEA</p>
+          <p className="mt-2 text-2xl font-black leading-tight">商品 ＋ 過ごし方<br/><span className="text-amber-300">＝ 来店理由</span></p>
+          <div className="mt-3 flex items-center gap-2 text-xs font-bold"><Sparkles size={17} className="text-amber-300"/>来店後の場面まで写す</div>
+        </div>
       </div>
       <div className="grid gap-3">
         <div className="grid gap-3 sm:grid-cols-2">
@@ -228,10 +232,6 @@ function ExperienceJourney() {
             </div>
           ))}
         </div>
-        <p className="border-l-4 border-brand-600 bg-brand-50 p-4 text-base font-black leading-relaxed text-slate-950">
-          コーチャンフォーは、“商品を紹介する場所”ではなく、<br className="hidden sm:block" />
-          お客様が一日を楽しめる場所として発信できる。
-        </p>
       </div>
     </div>
   );
