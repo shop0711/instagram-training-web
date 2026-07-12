@@ -130,7 +130,7 @@ export function RealPhotoCompare() {
     <div className="grid h-full gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
       <PhotoLesson label="演習用・改善前" media={media} bad />
       <div className="hidden items-center lg:flex"><ArrowRight className="text-brand-500" size={28} /></div>
-      <PhotoLesson label="おすすめの見せ方" media={media} />
+      <PhotoLesson label="教材用・改善後イメージ" media={media} />
     </div>
   );
 }
@@ -219,7 +219,7 @@ export function RealFirstImageCompare() {
       <div className="hidden items-center lg:flex"><ArrowRight className="text-brand-500" /></div>
       <FirstImageCard media={media} />
       <aside className="col-span-2 flex flex-col justify-center bg-slate-950 p-5 text-white sm:col-span-2 lg:col-span-1">
-        <p className="text-xs font-black text-amber-300">0.5秒で意味が分かる</p>
+        <p className="text-xs font-black text-amber-300">研修上の目安：ひと目で分かる</p>
         {['何の投稿？', 'なぜ今？', '主役はどれ？'].map((item, index) => <div key={item} className="mt-3 flex items-center gap-3 border-b border-white/15 pb-3"><span className="text-xl font-black text-white/25">0{index + 1}</span><b>{item}</b></div>)}
       </aside>
     </div>
@@ -231,10 +231,10 @@ function FirstImageCard({ media, bad = false }: { media: string; bad?: boolean }
     <article className={`relative min-h-[290px] overflow-hidden border-4 ${bad ? 'border-slate-300 bg-slate-100' : 'border-brand-700 bg-brand-700'}`}>
       <RealImage src={media} alt={bad ? '教材用に情報を弱く加工した実投稿写真' : '具体的な見出しを加えた実投稿写真'} className={`absolute inset-0 h-full w-full object-cover ${bad ? 'scale-75 opacity-45 grayscale' : 'scale-105'}`} />
       <span className={`absolute inset-0 ${bad ? 'bg-slate-100/35' : 'bg-gradient-to-t from-brand-950/90 via-transparent to-transparent'}`} />
-      <span className={`absolute left-3 top-3 px-2 py-1 text-[9px] font-black ${bad ? 'bg-white text-slate-500' : 'bg-amber-300 text-slate-950'}`}>{bad ? '演習用・改善前' : 'おすすめの見せ方'}</span>
+      <span className={`absolute left-3 top-3 px-2 py-1 text-[9px] font-black ${bad ? 'bg-white text-slate-500' : 'bg-amber-300 text-slate-950'}`}>{bad ? '演習用・改善前' : '教材用・改善後イメージ'}</span>
       <p className={`absolute inset-x-4 ${bad ? 'top-1/2 text-center text-sm text-slate-400' : 'bottom-4 text-2xl text-white'} font-black leading-tight`}>{bad ? 'お知らせ' : '本日入荷｜北海道限定'}</p>
       {bad && <div className="absolute bottom-3 left-3 right-3 grid grid-cols-2 gap-2 text-center text-[9px] font-black text-rose-700"><span className="bg-white/90 px-2 py-1">文字が弱い</span><span className="bg-white/90 px-2 py-1">主役が小さい</span></div>}
-      {!bad && <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white text-brand-700"><Check size={20} /></span>}
+      {!bad && <><span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white text-brand-700"><Check size={20} /></span><span className="absolute bottom-14 left-4 bg-white/95 px-2 py-1 text-[10px] font-black text-brand-900">マルシェ売場で展開中</span></>}
     </article>
   );
 }
@@ -243,7 +243,7 @@ export function SwipeCarouselLesson() {
   const [index, setIndex] = useState(0);
   const touchStart = useRef<number | null>(null);
   const slides = [
-    { label: '止める', headline: '本日入荷｜北海道限定', detail: '0.5秒で内容を伝える' },
+    { label: '止める', headline: '本日入荷｜北海道限定', detail: 'ひと目で内容を伝える' },
     { label: '詳しく', headline: '爽やかな味わい', detail: '特徴を短く整理する' },
     { label: '納得', headline: '休憩時間のおともに', detail: '使う場面を見せる' },
     { label: '来店へ', headline: 'マルシェ売場で展開中', detail: '場所と行動を伝える' },
@@ -336,8 +336,8 @@ export function RealAlgorithmPost() {
   const post = assetById.img_4828;
   return (
     <div className="border border-slate-200 bg-white p-3">
-      <span className="text-[9px] font-black text-slate-400">01 実際の役立つ投稿</span>
-      <div className="relative mt-2 aspect-[1.25] overflow-hidden text-white"><RealImage src={post.media ?? post.path} alt={post.alt} className="absolute inset-0 h-full w-full object-cover" /><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/10 to-transparent" /><span className="absolute left-3 top-3 bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">保存したい</span><p className="absolute bottom-3 left-3 text-xl font-black leading-tight">次に読みたい本を<br />見つける投稿</p></div>
+      <span className="text-[9px] font-black text-slate-400">01 投稿を見る</span>
+      <div className="relative mt-2 aspect-[1.25] overflow-hidden text-white"><RealImage src={post.media ?? post.path} alt={post.alt} className="absolute inset-0 h-full w-full object-cover" /><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/10 to-transparent" /><span className="absolute left-3 top-3 bg-amber-300 px-2 py-1 text-[8px] font-black text-slate-950">役立つ実例</span><p className="absolute bottom-3 left-3 text-lg font-black leading-tight">次に読みたい本を<br />見つける投稿</p></div>
     </div>
   );
 }

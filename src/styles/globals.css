@@ -30,12 +30,18 @@ body {
 
 button,
 a,
-input {
+input,
+textarea,
+select {
   -webkit-tap-highlight-color: transparent;
 }
 
 button:focus-visible,
 a:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
 [tabindex]:focus-visible {
   outline: 3px solid rgba(71, 127, 232, 0.38);
   outline-offset: 3px;

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
 import {
   AlertTriangle,
@@ -11,6 +10,7 @@ import {
   ChevronRight,
   CircleUserRound,
   Compass,
+  Coffee,
   Eye,
   HeartHandshake,
   MapPin,
@@ -20,7 +20,6 @@ import {
   Save,
   Send,
   ShieldCheck,
-  ShoppingBag,
   Sparkles,
   Store,
   Target,
@@ -33,6 +32,7 @@ import type { LucideIcon } from 'lucide-react';
 import type { SlideData } from '../data/training';
 import { assetById } from '../data/assetManifest';
 import { Checklist } from './Checklist';
+import { PostIdeaWorkshop } from './PostIdeaWorkshop';
 import {
   RealAlgorithmPost,
   RealFirstImageCompare,
@@ -55,7 +55,8 @@ const reveal = {
 const trainingPhotos = {
   stationery: assetById.img_4820.media ?? assetById.img_4820.path,
   books: assetById.img_4828.media ?? assetById.img_4828.path,
-  food: assetById.img_4824.media ?? assetById.img_4824.path
+  food: assetById.img_4824.media ?? assetById.img_4824.path,
+  music: assetById.img_4838.media ?? assetById.img_4838.path
 };
 
 export function TrainingSlideVisual({ slide }: Props) {
@@ -100,7 +101,7 @@ function renderVisual(slide: SlideData) {
     case 'formats': return <FormatGuide />;
     case 'first-image': return <FirstImageCompare />;
     case 'patterns': return <CarouselPatterns />;
-    case 'word-shift': return <StrongWords slide={slide} />;
+    case 'word-shift': return <StrongWords />;
     case 'profile': return <ProfileEntrance />;
     case 'algorithm': return <AlgorithmLoop />;
     case 'ai': return <AiPartner />;
@@ -115,19 +116,29 @@ function CoverVisual({ slide }: Props) {
 function GoalRoute({ slide }: Props) {
   const icons = [Compass, Camera, ShieldCheck];
   return (
-    <div className="grid h-full items-center gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
-      {slide.cards?.map((card, index) => {
-        const Icon = icons[index];
-        return <div className="contents" key={card.title}>
-          <motion.div {...reveal} transition={{ delay: index * .1 }} className="diagram-panel h-full max-h-64 p-6">
-            <span className="text-6xl font-black text-slate-100">0{index + 1}</span>
-            <Icon className="-mt-7 text-brand-700" size={32} />
-            <h2 className="mt-5 text-xl font-black text-slate-950">{card.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">{card.description}</p>
-          </motion.div>
-          {index < 2 && <ArrowRight className="hidden text-brand-400 lg:block" />}
-        </div>;
-      })}
+    <div className="grid h-full gap-4 lg:grid-rows-[1fr_auto]">
+      <div className="grid items-center gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+        {slide.cards?.map((card, index) => {
+          const Icon = icons[index];
+          return <div className="contents" key={card.title}>
+            <motion.div {...reveal} transition={{ delay: index * .1 }} className="diagram-panel h-full max-h-64 p-6">
+              <span className="text-6xl font-black text-slate-100">0{index + 1}</span>
+              <Icon className="-mt-7 text-brand-700" size={32} />
+              <h2 className="mt-5 text-xl font-black text-slate-950">{card.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{card.description}</p>
+            </motion.div>
+            {index < 2 && <ArrowRight className="hidden text-brand-400 lg:block" />}
+          </div>;
+        })}
+      </div>
+      <div className="flex items-center gap-3 border border-brand-200 bg-brand-50 p-3 sm:justify-center">
+        <img src="/assets/instagram-training-qr.svg" alt="研修サイトをスマートフォンで開くQRコード" width="78" height="78" className="h-[78px] w-[78px] shrink-0 bg-white p-1" />
+        <div className="min-w-0">
+          <p className="text-sm font-black text-brand-950">スマートフォンでもご覧いただけます</p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-600">QRコードから開いて、体験ページを操作してください</p>
+          <p className="mt-1 break-all text-[10px] font-bold text-brand-700">instagram-training-web.vercel.app</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -172,7 +183,7 @@ function AccountRoles() {
 
 function CustomerLens({ slide }: Props) {
   const icons = [PenLine, BookOpen, UtensilsCrossed, Music2];
-  const photos = [trainingPhotos.stationery, trainingPhotos.books, trainingPhotos.food, trainingPhotos.books];
+  const photos = [trainingPhotos.stationery, trainingPhotos.books, trainingPhotos.food, trainingPhotos.music];
   return (
     <div className="grid h-full gap-3 sm:grid-cols-2">
       {slide.compareExamples?.map((item, i) => {
@@ -191,22 +202,36 @@ function CustomerLens({ slide }: Props) {
 }
 
 function ExperienceJourney() {
-  const moments = [
-    {icon:BookOpen,time:'10:00',label:'本に出会う'}, {icon:PenLine,time:'11:00',label:'文具を試す'},
-    {icon:UtensilsCrossed,time:'12:00',label:'北海道を味わう'}, {icon:Music2,time:'14:00',label:'音楽を探す'}
+  const experiences = [
+    { icon: BookOpen, label: '本に出会う', detail: '話題の新刊や、休日に読みたい一冊を見つける' },
+    { icon: PenLine, label: '文具を試す', detail: '勉強や仕事が少し楽しくなるアイテムを探す' },
+    { icon: UtensilsCrossed, label: '北海道を味わう', detail: 'おうちで旅行気分を楽しめる食品を選ぶ' },
+    { icon: Music2, label: '音楽を探す', detail: '好きなアーティストや特典付き商品を見つける' },
+    { icon: Coffee, label: 'カフェで休む', detail: '買い物の合間に、ゆっくり過ごす' },
   ];
   return (
     <div className="grid h-full gap-5 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
       <div className="relative min-h-[280px] overflow-hidden border-l-4 border-brand-600">
         <img src={trainingPhotos.books} alt="整理された書籍フェア売場" className="absolute inset-0 h-full w-full object-cover"/>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent"/>
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-[10px] font-black text-amber-300">SUCCESS ACCOUNT</p><p className="mt-2 text-2xl font-black leading-tight">商品カタログではなく<br/>過ごす一日を見せる</p><div className="mt-3 flex items-center gap-2 text-xs font-bold"><ShoppingBag size={17} className="text-amber-300"/>「買う」から「楽しむ」へ</div></div>
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white"><p className="text-[10px] font-black text-amber-300">SUCCESS ACCOUNT</p><p className="mt-2 text-2xl font-black leading-tight">商品紹介から<br/>楽しみ方の提案へ</p><div className="mt-3 flex items-center gap-2 text-xs font-bold"><Sparkles size={17} className="text-amber-300"/>「買う」だけでなく「過ごす」を見せる</div></div>
       </div>
-      <div className="relative grid grid-cols-2 gap-3">
-        <div className="absolute left-1/2 top-8 h-[calc(100%-4rem)] w-px bg-brand-200" />
-        {moments.map(({icon:Icon,time,label},i)=><div key={label} className={`relative bg-white p-4 shadow-card ${i%2 ? 'mt-8' : ''}`}>
-          <span className="text-[10px] font-black text-brand-600">{time}</span><Icon className="mt-2 text-slate-800" size={22}/><p className="mt-3 text-sm font-black">{label}</p>
-        </div>)}
+      <div className="grid gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          {experiences.map(({ icon: Icon, label, detail }) => (
+            <div key={label} className="grid grid-cols-[42px_1fr] gap-3 border border-slate-200 bg-white p-3 shadow-card">
+              <div className="grid h-10 w-10 place-items-center bg-brand-50 text-brand-700"><Icon size={20} /></div>
+              <div>
+                <p className="text-sm font-black text-slate-950">{label}</p>
+                <p className="mt-1 text-xs font-bold leading-relaxed text-slate-500">{detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="border-l-4 border-brand-600 bg-brand-50 p-4 text-base font-black leading-relaxed text-slate-950">
+          コーチャンフォーは、“商品を紹介する場所”ではなく、<br className="hidden sm:block" />
+          お客様が一日を楽しめる場所として発信できる。
+        </p>
       </div>
     </div>
   );
@@ -251,23 +276,8 @@ function CarouselPatterns() {
   return <SwipeCarouselLesson />;
 }
 
-function StrongWords({slide}:Props) {
-  const pairs = slide.wordPairs ?? [];
-  const [selected,setSelected] = useState(0);
-  const active = pairs[selected] ?? {before:'お知らせ',after:'今週末開催'};
-  return (
-    <div className="grid h-full gap-4 lg:grid-cols-[1.15fr_.85fr]">
-      <div className="grid grid-cols-2 gap-2">
-        {pairs.map((pair,i)=><button type="button" onClick={()=>setSelected(i)} aria-pressed={selected===i} key={pair.before} className={`grid grid-cols-[.75fr_auto_1.25fr] items-center border p-2 text-left transition ${selected===i?'border-brand-400 bg-brand-50 shadow-card':'border-slate-200 bg-white'}`}>
-          <span className="text-[10px] font-bold text-slate-400 line-through">{pair.before}</span><ArrowRight size={12} className="text-brand-400"/><span className="text-xs font-black text-brand-900">{pair.after}</span>
-        </button>)}
-      </div>
-      <div className="grid grid-cols-2 items-center gap-2 bg-slate-950 p-3">
-        <div className="bg-white/10 p-3 text-white/45"><span className="text-[9px] font-black">WEAK</span><div className="relative mt-3 aspect-square overflow-hidden"><img src={trainingPhotos.food} alt="" className="absolute inset-0 h-full w-full scale-75 object-cover opacity-30 grayscale"/><span className="absolute inset-0 bg-slate-950/35"/><p className="relative p-3 text-sm font-bold">{active.before}</p></div></div>
-        <div className="bg-white p-3"><span className="text-[9px] font-black text-brand-600">STRONG</span><div className="relative mt-3 aspect-square overflow-hidden text-white shadow-lg"><img src={trainingPhotos.food} alt="北海道フェアの売場" className="absolute inset-0 h-full w-full object-cover"/><span className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-transparent to-transparent"/><span className="absolute left-3 top-3 bg-amber-300 px-1.5 py-1 text-[8px] font-black text-slate-950">NEW</span><p className="absolute inset-x-3 bottom-3 text-lg font-black leading-tight">{active.after}</p></div></div>
-      </div>
-    </div>
-  );
+function StrongWords() {
+  return <PostIdeaWorkshop />;
 }
 
 function ProfileEntrance() {
@@ -275,17 +285,38 @@ function ProfileEntrance() {
 }
 
 function AlgorithmLoop() {
-  const actions=[['最後まで見る',Eye],['保存',Save],['シェア',Send],['コメント',MessageCircle],['プロフィールへ',CircleUserRound]] as const;
+  const actions=[['視聴',Eye],['保存',Save],['送信',Send],['コメント',MessageCircle]] as const;
+  const metrics=[
+    ['保存','後から見返したい情報だったか',Save],
+    ['シェア・送信','家族や友人へ教えたい情報だったか',Send],
+    ['プロフィールへの移動','店舗へ興味を持ってもらえたか',CircleUserRound],
+    ['店頭での反応','「Instagramを見ました」という声や商品の動き',Store],
+  ] as const;
   return (
-    <div className="grid h-full gap-3 lg:grid-cols-[.72fr_1.1fr_.72fr] lg:items-center">
-      <RealAlgorithmPost />
-      <div className="relative border border-brand-200 bg-brand-50 p-4">
-        <span className="text-[9px] font-black text-brand-600">02 価値を行動で判断</span>
-        <div className="mt-3 grid grid-cols-5 gap-1.5">{actions.map(([label,Icon])=><div key={label} className="bg-white p-2 text-center shadow-sm"><Icon size={17} className="mx-auto text-brand-700"/><p className="mt-1 text-[8px] font-black leading-tight">{label}</p></div>)}</div>
-        <div className="mt-3 flex items-center justify-center gap-2 text-xs font-black text-brand-900"><HeartHandshake size={18}/>「見た人の役に立った」</div>
+    <div className="grid h-full min-h-0 gap-3 overflow-y-auto pr-1">
+      <div className="grid gap-2 lg:grid-cols-4">
+        <div className="min-h-0"><RealAlgorithmPost /></div>
+        <div className="border border-brand-200 bg-brand-50 p-3">
+          <span className="text-[9px] font-black text-brand-600">02 反応が生まれる</span>
+          <div className="mt-2 grid grid-cols-4 gap-1">{actions.map(([label,Icon])=><div key={label} className="bg-white p-2 text-center"><Icon size={16} className="mx-auto text-brand-700"/><p className="mt-1 text-[8px] font-black">{label}</p></div>)}</div>
+          <p className="mt-2 text-[10px] font-bold leading-relaxed text-slate-600">視聴時間、いいね、保存、送信、コメントなど</p>
+        </div>
+        <div className="border border-slate-200 bg-white p-3">
+          <span className="text-[9px] font-black text-slate-500">03 複数の情報を参考にする</span>
+          <HeartHandshake className="mt-3 text-brand-700" size={25}/>
+          <p className="mt-2 text-sm font-black text-slate-950">反応だけでなく、投稿者との関係性なども参考に</p>
+        </div>
+        <div className="border-l-4 border-emerald-500 bg-emerald-50 p-3">
+          <span className="text-[9px] font-black text-emerald-700">04 表示されることがある</span>
+          <Bookmark className="mt-3 text-emerald-700" size={25}/>
+          <p className="mt-2 text-sm font-black text-slate-950">興味を持つ可能性がある人へ</p>
+          <p className="mt-1 text-[10px] leading-relaxed text-slate-600">保存やシェアだけで、必ず広がるわけではありません。</p>
+        </div>
       </div>
-      <div className="border-l-4 border-emerald-500 bg-emerald-50 p-4">
-        <span className="text-[9px] font-black text-emerald-700">03 次の表示へ</span><Bookmark className="mt-3 text-emerald-700" size={26}/><p className="mt-2 text-xl font-black text-slate-950">また届く</p><p className="mt-1 text-xs leading-relaxed text-slate-600">似た興味を持つ地域のお客様へ。</p>
+      <div className="border border-slate-200 bg-slate-50 p-3">
+        <div className="flex flex-wrap items-end justify-between gap-2"><div><p className="text-[10px] font-black text-brand-700">振り返り</p><h2 className="text-lg font-black text-slate-950">投稿後は、何を見ればいい？</h2></div><p className="text-xs font-black text-brand-900">いいね数だけを成功基準にしない</p></div>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">{metrics.map(([label,detail,Icon])=><div key={label} className="flex gap-2 bg-white p-2"><Icon size={17} className="mt-0.5 shrink-0 text-brand-700"/><div><p className="text-[10px] font-black text-slate-950">{label}</p><p className="mt-0.5 text-[9px] leading-relaxed text-slate-500">{detail}</p></div></div>)}</div>
+        <p className="mt-2 border-l-4 border-amber-400 bg-white px-3 py-2 text-xs font-black text-slate-900">数字を見る目的は、評価ではなく次の投稿を良くすること。</p>
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ for (const file of files) {
     .webp({ quality: 78, effort: 5 })
     .toFile(path.join(outputDir, `${base}-thumb.webp`));
 
-  if (/^img_48(20|21|22|23|24|25|26|27|28)$/.test(base)) {
+  if (/^img_48(20|21|22|23|24|25|26|27|28|38)$/.test(base)) {
     await sharp(source)
       .rotate()
       .extract({ left: 0, top: 310, width: 1206, height: 1206 })
