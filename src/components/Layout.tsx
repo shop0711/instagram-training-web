@@ -7,8 +7,10 @@ import {
   Expand,
   MonitorPlay,
   Rows3,
+  Smartphone,
   Shrink
 } from 'lucide-react';
+import type { ViewMode } from '../App';
 import type { SlideData } from '../data/training';
 import { ChapterNav } from './ChapterNav';
 import { ProgressBar } from './ProgressBar';
@@ -17,8 +19,8 @@ type LayoutProps = {
   children: ReactNode;
   slides: SlideData[];
   currentIndex: number;
-  mode: 'presentation' | 'reader';
-  onModeChange: (mode: 'presentation' | 'reader') => void;
+  mode: ViewMode;
+  onModeChange: (mode: ViewMode) => void;
   onNavigate: (index: number) => void;
 };
 
@@ -35,6 +37,7 @@ export function Layout({
   const current = slides[currentIndex];
   const canGoBack = currentIndex > 0;
   const canGoForward = currentIndex < slides.length - 1;
+  const phoneMode = mode === 'phone';
 
   const toggleFullscreen = async () => {
     try {
@@ -53,7 +56,7 @@ export function Layout({
     <div className="min-h-dvh">
       <header className="no-print sticky top-0 z-40 border-b border-white/80 bg-[#f6f8fb]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-[71px] max-w-[1800px] items-center gap-3 px-4 sm:px-6 lg:px-8">
-          <button
+          {!phoneMode && <button
             type="button"
             onClick={() => setTocOpen(true)}
             className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 shadow-sm transition hover:border-brand-200 hover:text-brand-700 xl:hidden"
@@ -61,16 +64,16 @@ export function Layout({
           >
             <BookOpen size={16} aria-hidden="true" />
             <span className="hidden sm:inline">目次</span>
-          </button>
+          </button>}
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <span className="hidden rounded-full bg-brand-700 px-2 py-1 text-[0.6rem] font-bold uppercase tracking-widest text-white sm:inline-flex">
                 Instagram Training
               </span>
-              <p className="truncate text-xs font-bold text-slate-900 sm:text-sm">{current.chapterTitle}</p>
+              <p className="truncate text-xs font-bold text-slate-900 sm:text-sm">{phoneMode ? '参加者と同じスマホ画面' : current.chapterTitle}</p>
             </div>
-            <p className="mt-0.5 truncate text-[0.65rem] text-slate-500">{current.title}</p>
+            <p className="mt-0.5 truncate text-[0.65rem] text-slate-500">{phoneMode ? '中央の画面をスクロールして操作できます' : current.title}</p>
           </div>
 
           <div className="hidden items-center rounded-full border border-slate-200 bg-white p-1 shadow-sm md:flex">
@@ -94,6 +97,16 @@ export function Layout({
             >
               <Rows3 size={14} aria-hidden="true" /> 閲覧
             </button>
+            <button
+              type="button"
+              onClick={() => onModeChange('phone')}
+              className={`inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-bold transition ${
+                mode === 'phone' ? 'bg-brand-700 text-white' : 'text-slate-500 hover:text-slate-900'
+              }`}
+              aria-pressed={mode === 'phone'}
+            >
+              <Smartphone size={14} aria-hidden="true" /> スマホ
+            </button>
           </div>
 
           <button
@@ -105,29 +118,39 @@ export function Layout({
             {fullscreen ? <Shrink size={17} aria-hidden="true" /> : <Expand size={17} aria-hidden="true" />}
           </button>
         </div>
-        <ProgressBar current={currentIndex + 1} total={slides.length} />
+        {!phoneMode && <ProgressBar current={currentIndex + 1} total={slides.length} />}
       </header>
 
-      <main className="mx-auto flex max-w-[1800px] gap-5 px-3 pb-28 pt-4 sm:px-6 lg:px-8 lg:pt-5">
-        <ChapterNav
+      <main className={`mx-auto flex max-w-[1800px] gap-5 px-3 sm:px-6 lg:px-8 ${phoneMode ? 'h-[calc(100dvh-72px)] items-start justify-center overflow-hidden bg-slate-200/55 pb-3 pt-3' : 'pb-28 pt-4 lg:pt-5'}`}>
+        {!phoneMode && <ChapterNav
           slides={slides}
           currentIndex={currentIndex}
           onNavigate={onNavigate}
           variant="rail"
-        />
-        <div className={`print-stack min-w-0 flex-1 ${mode === 'reader' ? 'space-y-6' : ''}`}>{children}</div>
+        />}
+        {phoneMode ? (
+          <div className="h-full w-full max-w-[430px] overflow-hidden border border-slate-300 bg-white shadow-2xl" aria-label="スマホ表示プレビュー">
+            <iframe
+              src="/?phone-preview=1"
+              title="参加者と同じスマートフォン表示"
+              className="h-full w-full border-0 bg-white"
+            />
+          </div>
+        ) : (
+          <div className={`print-stack min-w-0 flex-1 ${mode === 'reader' ? 'space-y-6' : ''}`}>{children}</div>
+        )}
       </main>
 
-      <ChapterNav
+      {!phoneMode && <ChapterNav
         slides={slides}
         currentIndex={currentIndex}
         onNavigate={onNavigate}
         open={tocOpen}
         onClose={() => setTocOpen(false)}
         variant="dialog"
-      />
+      />}
 
-      <div className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-[#f6f8fb]/92 px-3 py-3 backdrop-blur-xl sm:px-6">
+      {!phoneMode && <div className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-[#f6f8fb]/92 px-3 py-3 backdrop-blur-xl sm:px-6">
         <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-3">
           <button
             type="button"
@@ -165,7 +188,7 @@ export function Layout({
             <ArrowRight size={17} aria-hidden="true" />
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -4,7 +4,10 @@ import { Slide } from './components/Slide';
 import { TrainingSlideVisual } from './components/TrainingSlideVisual';
 import { trainingSlides } from './data/training';
 
-type ViewMode = 'presentation' | 'reader';
+export type ViewMode = 'presentation' | 'reader' | 'phone';
+
+const storedMode = window.localStorage.getItem('instagram-training-view-mode');
+const initialMode: ViewMode = storedMode === 'reader' || storedMode === 'phone' ? storedMode : 'presentation';
 
 function resetPageScroll() {
   window.scrollTo({ top: 0, left: 0 });
@@ -13,9 +16,14 @@ function resetPageScroll() {
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [mode, setMode] = useState<ViewMode>('presentation');
-  const [isMobile, setIsMobile] = useState(false);
+  const [mode, setMode] = useState<ViewMode>(initialMode);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 899px)').matches);
   const effectiveMode: ViewMode = isMobile ? 'reader' : mode;
+
+  const changeMode = useCallback((nextMode: ViewMode) => {
+    setMode(nextMode);
+    window.localStorage.setItem('instagram-training-view-mode', nextMode);
+  }, []);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
@@ -105,7 +113,11 @@ function App() {
   }, [effectiveMode]);
 
   const visibleSlides = useMemo(
-    () => (effectiveMode === 'presentation' ? [trainingSlides[currentIndex]] : trainingSlides),
+    () => effectiveMode === 'presentation'
+      ? [trainingSlides[currentIndex]]
+      : effectiveMode === 'reader'
+        ? trainingSlides
+        : [],
     [currentIndex, effectiveMode]
   );
 
@@ -114,11 +126,11 @@ function App() {
       slides={trainingSlides}
       currentIndex={currentIndex}
       mode={effectiveMode}
-      onModeChange={setMode}
+      onModeChange={changeMode}
       onNavigate={navigate}
     >
       {visibleSlides.map((slide) => (
-        <Slide key={slide.id} slide={slide} mode={effectiveMode}>
+        <Slide key={slide.id} slide={slide} mode={effectiveMode === 'presentation' ? 'presentation' : 'reader'}>
           <TrainingSlideVisual slide={slide} />
         </Slide>
       ))}
