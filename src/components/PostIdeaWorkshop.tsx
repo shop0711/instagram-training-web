@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Check, Clipboard, RotateCcw, Sparkles, WandSparkles } from 'lucide-react';
-import { assetById } from '../data/assetManifest';
+import { Check, Clipboard, Images, RotateCcw, Sparkles, WandSparkles } from 'lucide-react';
 import {
   postTypes,
   samplePostIdea,
@@ -10,6 +9,7 @@ import {
   type TimingReason,
 } from '../data/postTemplates';
 import { generatePostCopy, type GeneratedPostCopy } from '../utils/generatePostCopy';
+import { pickWorkshopAsset, type WorkshopAsset } from '../data/workshopAssets';
 
 const emptyIdea: PostIdeaInput = {
   type: '新商品',
@@ -25,7 +25,7 @@ export function PostIdeaWorkshop() {
   const [result, setResult] = useState<GeneratedPostCopy | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState('');
-  const media = assetById.img_4824.media ?? assetById.img_4824.path;
+  const [media, setMedia] = useState<WorkshopAsset | null>(null);
 
   const update = <Key extends keyof PostIdeaInput>(key: Key, value: PostIdeaInput[Key]) => {
     setInput((current) => ({ ...current, [key]: value }));
@@ -39,6 +39,7 @@ export function PostIdeaWorkshop() {
       return;
     }
     setResult(generatePostCopy(input));
+    setMedia((current) => pickWorkshopAsset(input.type, current?.src));
     setError('');
   };
 
@@ -53,6 +54,7 @@ export function PostIdeaWorkshop() {
     setResult(null);
     setError('');
     setCopied('');
+    setMedia(null);
   };
 
   return (
@@ -90,7 +92,14 @@ export function PostIdeaWorkshop() {
 
       <div className="min-h-[420px]" aria-live="polite">
         {result ? (
-          <PostResultCard result={result} media={media} copied={copied} onCopy={copy} onReset={reset} />
+          <PostResultCard
+            result={result}
+            media={media ?? pickWorkshopAsset(input.type)}
+            copied={copied}
+            onCopy={copy}
+            onReset={reset}
+            onChangeMedia={() => setMedia((current) => pickWorkshopAsset(input.type, current?.src))}
+          />
         ) : (
           <div className="flex h-full min-h-[420px] flex-col justify-center border border-brand-200 bg-brand-50 p-5">
             <p className="text-xs font-black text-brand-700">BEFORE → AFTER</p>
@@ -149,7 +158,7 @@ function TextField({ label, value, placeholder, onChange, required = false, erro
   );
 }
 
-function PostResultCard({ result, media, copied, onCopy, onReset }: { result: GeneratedPostCopy; media: string; copied: string; onCopy: (label: string, text: string) => void; onReset: () => void }) {
+function PostResultCard({ result, media, copied, onCopy, onReset, onChangeMedia }: { result: GeneratedPostCopy; media: WorkshopAsset; copied: string; onCopy: (label: string, text: string) => void; onReset: () => void; onChangeMedia: () => void }) {
   const items = [
     { label: 'フィード見出し', text: result.headline },
     { label: 'キャプション', text: result.caption },
@@ -164,10 +173,13 @@ function PostResultCard({ result, media, copied, onCopy, onReset }: { result: Ge
         {copied && <span className="ml-auto flex items-center gap-1 bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700"><Check size={12} />コピーしました</span>}
       </div>
       <div className="relative aspect-[16/9] overflow-hidden text-white">
-        <img src={media} alt="北海道限定ヨーグルッペの実在投稿素材" width="900" height="900" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={media.src} alt={media.alt} width="900" height="900" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         <span className="absolute inset-0 bg-gradient-to-t from-brand-950/95 via-brand-950/10 to-transparent" />
         <span className="absolute left-4 top-4 bg-amber-300 px-2 py-1 text-[9px] font-black text-slate-950">教材用・生成イメージ</span>
         <p className="absolute inset-x-4 bottom-4 text-xl font-black leading-tight sm:text-2xl">{result.headline}</p>
+        <button type="button" onClick={onChangeMedia} className="absolute right-3 top-3 inline-flex min-h-10 items-center gap-1 bg-white/95 px-3 text-[10px] font-black text-slate-800 shadow-sm" aria-label="同じ投稿種類の別の画像を表示">
+          <Images size={14} /> 別の画像
+        </button>
       </div>
       <div className="max-h-[360px] space-y-3 overflow-y-auto p-4">
         {items.map((item) => (

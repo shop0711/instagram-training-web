@@ -44,4 +44,38 @@ for (const file of files) {
   }
 }
 
-console.log(`Processed ${files.length} source screenshots into ${outputDir}`);
+const workshopSourceDir = path.join(sourceDir, 'workshop');
+const workshopOutputDir = path.join(outputDir, 'workshop');
+let workshopFiles = [];
+
+try {
+  workshopFiles = (await readdir(workshopSourceDir, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && supported.test(entry.name))
+    .map((entry) => entry.name)
+    .sort();
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
+
+if (workshopFiles.length > 0) {
+  await mkdir(workshopOutputDir, { recursive: true });
+
+  for (const file of workshopFiles) {
+    const source = path.join(workshopSourceDir, file);
+    const base = path.parse(file).name.replace(/\.webp$/i, '').toLowerCase();
+
+    await sharp(source)
+      .rotate()
+      .resize({ width: 900, height: 900, fit: 'cover', withoutEnlargement: true })
+      .webp({ quality: 82, effort: 5 })
+      .toFile(path.join(workshopOutputDir, `${base}.webp`));
+
+    await sharp(source)
+      .rotate()
+      .resize({ width: 420, height: 420, fit: 'cover', withoutEnlargement: true })
+      .webp({ quality: 78, effort: 5 })
+      .toFile(path.join(workshopOutputDir, `${base}-thumb.webp`));
+  }
+}
+
+console.log(`Processed ${files.length} screenshots and ${workshopFiles.length} workshop images into ${outputDir}`);

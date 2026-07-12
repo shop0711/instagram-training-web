@@ -527,9 +527,6 @@ export function SwipeCarouselLesson() {
         <div className="border border-amber-200 bg-amber-50 p-3 text-xs font-bold leading-relaxed text-amber-950">
           端に置いた文字は、プロフィール一覧で見切れることがあります。重要情報は中央付近に置きましょう。
         </div>
-        <div className="border-l-4 border-amber-400 bg-slate-950 p-3 text-white">
-          <p className="text-base font-black">型があると、速く・迷わず・伝わる。大事な文字は中央に置く。</p>
-        </div>
       </div>
     </div>
   );
