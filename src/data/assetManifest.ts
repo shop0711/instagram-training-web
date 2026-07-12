@@ -56,7 +56,7 @@ export const trainingAssets = [
   asset('img_4826', 'マルシェ売場の投稿', '若葉台店', 'post', '食品・マルシェ', [7, 10], '若葉台店のマルシェ売場を紹介する投稿', '季節の食品'),
   asset('img_4827', '期間限定の売場情報', '若葉台店', 'post', '雑貨', [7], '期間限定の売場情報を紹介する若葉台店の投稿', 'スタッフおすすめ'),
   asset('img_4828', '書籍売場の投稿', '若葉台店', 'post', '書籍', [7, 15], '本を手に取って紹介する若葉台店の書籍投稿', '書籍'),
-  asset('img_4838', '音楽商品の投稿', '若葉台店', 'post', '音楽', [5], '音楽商品を紹介する若葉台店のInstagram投稿', '音楽'),
+  asset('img_4838', '話題作の新商品発売の投稿', '若葉台店', 'post', '音楽', [5, 7], '話題作の新商品発売を紹介する若葉台店の投稿', '新商品'),
 ] as const satisfies readonly TrainingAsset[];
 
 export const assetById = Object.fromEntries(
