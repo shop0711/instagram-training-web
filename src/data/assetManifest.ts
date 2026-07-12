@@ -64,5 +64,5 @@ export const assetById = Object.fromEntries(
 ) as Record<(typeof trainingAssets)[number]['id'], TrainingAsset>;
 
 export const wakabadaiPosts = trainingAssets.filter(
-  (item) => item.store === '若葉台店' && item.type === 'post',
+  (item) => item.store === '若葉台店' && item.type === 'post' && item.sections.includes(7),
 );
