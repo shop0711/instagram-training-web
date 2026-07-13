@@ -11,7 +11,6 @@ import {
   MapPin,
   MessageCircle,
   MousePointer2,
-  Pin,
   Play,
   Search,
   Send,
@@ -238,6 +237,7 @@ export function RealFormatGuide() {
         {active === 'stories' && (
           <div className="mt-3 bg-amber-50 p-3 text-xs font-bold leading-relaxed text-amber-950">
             抽選結果は対象のお客様には必要な情報です。ただし後から見た人には関係が薄く、フィードに残るとノイズになりやすいため、24時間で消えるストーリーズが向いています。
+            <span className="mt-1 block font-black text-brand-800">残しておきたい情報は、あとからハイライトに整理できます。</span>
           </div>
         )}
         {active === 'reels' && (
@@ -530,35 +530,53 @@ export function SwipeCarouselLesson() {
 }
 
 export function RealProfileEntrance() {
-  const miniPosts = [assetById.img_4822, assetById.img_4824, assetById.img_4826, assetById.img_4827, assetById.img_4828, assetById.img_4820];
+  const highlightGroups = [
+    ['店舗案内', Store],
+    ['アクセス', MapPin],
+    ['開催中', Sparkles],
+    ['新商品', Grid3X3],
+    ['イベント', Clock3],
+  ] as const;
+  const benefits = ['24時間後も、必要な情報を残せる', '知りたい情報へ、すぐ案内できる', '開催中の企画を、ひと目で見せられる'];
+
   return (
-    <div className="grid h-full gap-4 lg:grid-cols-[1fr_1fr]">
-      <article className="grid min-h-0 grid-cols-[.72fr_.28fr] gap-3 border border-slate-200 bg-slate-50 p-3">
+    <div className="grid h-full gap-4 lg:grid-cols-[.82fr_1.18fr]">
+      <article className="grid min-h-0 grid-cols-[.78fr_.22fr] gap-3 border border-slate-200 bg-slate-50 p-3">
         <div className="relative min-h-[330px] overflow-hidden border-[5px] border-slate-950 bg-white">
           <RealImage src={profile.path} alt={profile.alt} className="h-full w-full object-cover object-top" />
-          <Callout top="14%" right="2%">名前欄</Callout>
-          <Callout top="28%" left="2%">自己紹介</Callout>
-          <Callout top="43%" right="2%">リンク</Callout>
-          <Callout top="61%" left="2%">ハイライト</Callout>
-          <Callout top="78%" right="2%">投稿グリッド</Callout>
+          <span className="absolute inset-x-0 top-[52%] h-[19%] border-y-4 border-amber-300 bg-amber-300/10" />
+          <Callout top="56%" right="2%">ここを案内板に</Callout>
         </div>
-        <div className="flex flex-col justify-center gap-3">
-          <span className="bg-slate-900 px-2 py-2 text-center text-[10px] font-black text-white">現在の見え方</span>
-          {['何の店？', 'どこ？', '何を発信？', '次は何をする？'].map((item) => <span key={item} className="border-l-2 border-slate-300 bg-white p-2 text-[9px] font-bold text-slate-600">{item}</span>)}
+        <div className="flex flex-col justify-center gap-3 text-center">
+          <span className="bg-slate-900 px-2 py-2 text-[10px] font-black text-white">実際のプロフィール</span>
+          <ArrowRight className="mx-auto text-brand-600" size={20} />
+          <span className="border-l-2 border-amber-400 bg-white p-2 text-[9px] font-black text-slate-700">ストーリーズを<br />目的別に残す</span>
         </div>
       </article>
 
-      <article className="grid min-h-0 grid-cols-[.72fr_.28fr] gap-3 border border-brand-200 bg-brand-50 p-3">
-        <div className="overflow-hidden border-[5px] border-slate-950 bg-white p-3">
-          <div className="flex items-center gap-3"><span className="grid h-12 w-12 place-items-center rounded-full bg-brand-700 text-xs font-black text-white">C4</span><div><h3 className="text-sm font-black">コーチャンフォー若葉台店</h3><p className="flex items-center gap-1 text-[9px] text-slate-500"><MapPin size={10} />稲城市若葉台｜書籍・文具・食品</p></div></div>
-          <p className="mt-3 bg-brand-50 p-2 text-[10px] font-bold leading-relaxed text-slate-700">今の売場・新商品・イベントを毎日発信。<br /><span className="text-brand-700">今週は北海道フェア開催中 →</span></p>
-          <div className="mt-3 grid grid-cols-3 gap-2">{[['店舗案内', Store], ['開催中', Sparkles], ['アクセス', MapPin]].map(([label, Icon]) => { const IconComponent = Icon; return <div key={String(label)} className="text-center"><span className="mx-auto grid h-9 w-9 place-items-center rounded-full border-2 border-brand-300 bg-white text-brand-700"><IconComponent size={15} /></span><span className="text-[8px] font-bold">{String(label)}</span></div>; })}</div>
-          <div className="mt-3 grid grid-cols-3 gap-1">{miniPosts.map((item, index) => <div key={item.id} className="relative aspect-square overflow-hidden"><RealImage src={item.media ?? item.thumbnail} alt="" className="h-full w-full object-cover" />{index < 3 && <Pin size={12} className="absolute right-1 top-1 text-white drop-shadow" fill="currentColor" />}</div>)}</div>
+      <article className="flex min-h-0 flex-col justify-center border border-brand-200 bg-brand-50 p-4">
+        <div>
+          <span className="text-[10px] font-black tracking-[.16em] text-brand-700">HIGHLIGHT GUIDE</span>
+          <h3 className="mt-1 text-xl font-black text-slate-950">24時間で消える情報を、<br />いつでも見られる店舗案内へ。</h3>
         </div>
-        <div className="flex flex-col justify-center gap-2">
-          <span className="bg-brand-700 px-2 py-2 text-center text-[10px] font-black text-white">改善後イメージ</span>
-          {['名前欄で検索される言葉を伝える', '自己紹介でフォローする理由を伝える', 'ハイライトで迷わせない', '投稿グリッドで今の売場を見せる'].map((item) => <span key={item} className="flex items-start gap-1 border-l-2 border-emerald-500 bg-white p-2 text-[8px] font-black leading-snug text-slate-700"><Check size={11} className="mt-0.5 shrink-0 text-emerald-600" />{item}</span>)}
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          {benefits.map((item) => <span key={item} className="flex items-start gap-1.5 border-l-4 border-emerald-500 bg-white p-2 text-[9px] font-black leading-snug text-slate-700"><Check size={12} className="mt-0.5 shrink-0 text-emerald-600" />{item}</span>)}
         </div>
+        <div className="mt-3 border border-brand-200 bg-white p-3">
+          <p className="text-[9px] font-black text-brand-700">おすすめの分け方</p>
+          <div className="mt-2 grid grid-cols-5 gap-2">
+            {highlightGroups.map(([label, Icon]) => <div key={label} className="min-w-0 text-center"><span className="mx-auto grid h-9 w-9 place-items-center rounded-full border-2 border-brand-300 bg-brand-50 text-brand-700"><Icon size={14} /></span><span className="mt-1 block text-[8px] font-bold leading-tight text-slate-700">{label}</span></div>)}
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 text-center">
+          {['ストーリーズを投稿', 'ハイライトに追加', '名前とカバーを設定'].map((item, index) => (
+            <div key={item} className="contents">
+              <div className="bg-slate-950 px-2 py-3 text-[9px] font-black leading-snug text-white"><span className="mb-1 block text-amber-300">0{index + 1}</span>{item}</div>
+              {index < 2 && <ArrowRight size={15} className="text-brand-500" />}
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 bg-amber-50 p-2 text-center text-[10px] font-black text-amber-950">投稿したストーリーズを選んで、名前を付けるだけ。</p>
       </article>
     </div>
   );
